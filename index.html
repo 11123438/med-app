@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>粤港澳医疗通</title>
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="粤港澳医疗通">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+      background: #eef1f6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .phone {
+      width: 390px;
+      height: 780px;
+      background: #fff;
+      border-radius: 44px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.18), 0 0 0 10px #1a1d23;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .status-bar {
+      height: 44px;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1d23;
+      flex-shrink: 0;
+      background: #fff;
+    }
+    .status-right { display: flex; gap: 5px; align-items: center; }
+    .status-right span { font-size: 12px; }
+    .notch {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 26px;
+      background: #1a1d23;
+      border-radius: 20px;
+      z-index: 10;
+    }
+    .page {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: none;
+      flex-direction: column;
+      background: #f7f9fc;
+    }
+    .page.active { display: flex; }
+    .page::-webkit-scrollbar { display: none; }
+
+    .login-page {
+      background: linear-gradient(170deg, #e8f0fe 0%, #f7f9fc 40%);
+      padding: 0 28px;
+    }
+    .login-header {
+      margin-top: 58px;
+      margin-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .logo-box {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.32);
+      margin-bottom: 22px;
+    }
+    .logo-box svg { width: 34px; height: 34px; fill: #fff; }
+    .login-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .login-sub {
+      font-size: 13px;
+      color: #8a94a6;
+      line-height: 1.6;
+    }
+    .input-group {
+      background: #fff;
+      border-radius: 14px;
+      padding: 4px 18px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 14px;
+      border: 1.5px solid transparent;
+      transition: border-color .2s, box-shadow .2s;
+      box-shadow: 0 2px 10px rgba(20,40,80,0.05);
+    }
+    .input-group:focus-within {
+      border-color: #3b82f6;
+      box-shadow: 0 4px 14px rgba(59,130,246,0.14);
+    }
+    .input-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+      fill: #aab3c2;
+      flex-shrink: 0;
+    }
+    .input-group input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 15px;
+      padding: 15px 0;
+      color: #111827;
+      background: transparent;
+      font-family: inherit;
+      min-width: 0;
+    }
+    .input-group input::placeholder { color: #b8c0cd; }
+    .divider-v {
+      width: 1px;
+      height: 22px;
+      background: #e3e8f0;
+      margin: 0 12px;
+      flex-shrink: 0;
+    }
+    .code-prefix {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2937;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 0;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .code-prefix .caret { width: 16px; height: 16px; fill: #9aa5b5; }
+    .phone-hint {
+      font-size: 11.5px;
+      color: #9aa5b5;
+      margin: -6px 4px 16px;
+      line-height: 1.55;
+    }
+    .code-btn {
+      border: none;
+      background: transparent;
+      color: #2563eb;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 0;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: opacity .2s;
+      flex-shrink: 0;
+    }
+    .code-btn:disabled { color: #b8c0cd; cursor: default; }
+    .code-btn:active:not(:disabled) { opacity: .6; }
+    .agree-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin: 18px 4px 26px;
+      font-size: 12px;
+      color: #8a94a6;
+      line-height: 1.6;
+      cursor: pointer;
+    }
+    .checkbox {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1.5px solid #c7cfdb;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+    }
+    .checkbox.checked { background: #2563eb; border-color: #2563eb; }
+    .checkbox.checked::after {
+      content: '';
+      width: 4px;
+      height: 8px;
+      border: solid #fff;
+      border-width: 0 1.8px 1.8px 0;
+      transform: rotate(45deg) translate(-0.5px, -1px);
+    }
+    .agree-row b { color: #2563eb; font-weight: 500; }
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(37, 99, 235, 0.3);
+      font-family: inherit;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .login-btn:active { transform: scale(0.975); box-shadow: 0 4px 12px rgba(37,99,235,0.28); }
+    .login-btn:disabled { background: #cfd8e6; box-shadow: none; color: #fff; cursor: default; }
+    .login-foot {
+      margin-top: auto;
+      padding-bottom: 34px;
+      text-align: center;
+      font-size: 11.5px;
+      color: #b0b8c4;
+      line-height: 1.7;
+    }
+
+    .home-header { padding: 8px 20px 16px; background: #fff; flex-shrink: 0; }
+    .home-title-row {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+    }
+    .home-title { font-size: 22px; font-weight: 700; color: #111827; letter-spacing: .3px; }
+    .avatar-mini {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #93c5fd, #3b82f6);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .search-bar {
+      display: flex; align-items: center; background: #f2f5fa;
+      border-radius: 12px; padding: 0 14px; height: 42px;
+    }
+    .search-bar svg { width: 17px; height: 17px; fill: #9aa5b5; margin-right: 9px; }
+    .search-bar span { font-size: 13.5px; color: #9aa5b5; }
+
+    .news-list { padding: 16px 20px 20px; }
+    .section-label {
+      font-size: 13px; font-weight: 600; color: #8a94a6; margin-bottom: 12px;
+      letter-spacing: .5px; display: flex; align-items: center; gap: 7px;
+    }
+    .section-label::before {
+      content: ''; width: 3px; height: 13px; border-radius: 2px; background: #3b82f6;
+    }
+    .news-card {
+      background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 12px;
+      box-shadow: 0 2px 12px rgba(20,40,80,0.05);
+      display: flex; gap: 14px; cursor: pointer; transition: transform .15s;
+    }
+    .news-card:active { transform: scale(0.985); }
+    .news-thumb {
+      width: 76px; height: 76px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 26px;
+    }
+    .t-blue { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+    .t-green { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+    .t-orange { background: linear-gradient(135deg, #ffedd5, #fed7aa); }
+    .t-purple { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+    .news-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .news-title {
+      font-size: 14.5px; font-weight: 600; color: #1f2937; line-height: 1.45; margin-bottom: 7px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .news-meta { margin-top: auto; display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: #9aa5b5; }
+    .tag { padding: 2.5px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 500; }
+    .tag-blue { background: #e8f0fe; color: #2563eb; }
+    .tag-green { background: #e6f7ee; color: #0f9960; }
+    .tag-orange { background: #fff3e6; color: #d97706; }
+
+    .law-tabs { display: flex; gap: 8px; padding: 0 20px 14px; overflow-x: auto; }
+    .law-tabs::-webkit-scrollbar { display: none; }
+    .law-tab {
+      padding: 7px 15px; border-radius: 20px; font-size: 12.5px; background: #fff;
+      color: #5c6675; white-space: nowrap; cursor: pointer;
+      border: 1px solid #e8ecf3; transition: all .2s; font-weight: 500;
+    }
+    .law-tab.active {
+      background: #2563eb; color: #fff; border-color: #2563eb;
+      box-shadow: 0 4px 12px rgba(37,99,235,.25);
+    }
+    .law-list { padding: 0 20px 20px; }
+    .law-item {
+      background: #fff; border-radius: 14px; padding: 15px 16px; margin-bottom: 10px;
+      box-shadow: 0 2px 10px rgba(20,40,80,0.045);
+      display: flex; align-items: center; gap: 13px; cursor: pointer; transition: transform .15s;
+    }
+    .law-item:active { transform: scale(0.985); }
+    .law-icon {
+      width: 40px; height: 40px; border-radius: 11px; background: #eef4ff;
+      display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .law-body { flex: 1; min-width: 0; }
+    .law-name {
+      font-size: 14px; font-weight: 600; color: #1f2937; margin-bottom: 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .law-desc { font-size: 11.5px; color: #9aa5b5; display: flex; gap: 8px; }
+    .arrow { color: #c7cfdb; font-size: 15px; flex-shrink: 0; }
+
+    .region-tabs { display: flex; gap: 10px; padding: 0 20px 16px; }
+    .region-tab {
+      flex: 1; text-align: center; padding: 11px 0; border-radius: 12px;
+      font-size: 13.5px; font-weight: 600; background: #fff; color: #5c6675;
+      cursor: pointer; border: 1.5px solid #e8ecf3; transition: all .2s;
+    }
+    .region-tab.active {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: #fff; border-color: #2563eb;
+      box-shadow: 0 5px 14px rgba(37,99,235,.26);
+    }
+    .hospital-list { padding: 0 20px 20px; }
+    .hospital-card {
+      background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 12px;
+      box-shadow: 0 2px 12px rgba(20,40,80,0.05); cursor: pointer; transition: transform .15s;
+    }
+    .hospital-card:active { transform: scale(0.985); }
+    .h-top { display: flex; gap: 12px; margin-bottom: 12px; }
+    .h-logo {
+      width: 46px; height: 46px; border-radius: 12px;
+      background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+      display: flex; align-items: center; justify-content: center; font-size: 21px; flex-shrink: 0;
+    }
+    .h-info { flex: 1; min-width: 0; }
+    .h-name {
+      font-size: 15px; font-weight: 600; color: #1f2937; margin-bottom: 5px;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .h-level {
+      font-size: 10px; font-weight: 600; color: #d97706; background: #fff7e6;
+      padding: 2px 6px; border-radius: 5px; flex-shrink: 0;
+    }
+    .h-addr { font-size: 12px; color: #9aa5b5; }
+    .h-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 11px; border-top: 1px solid #f1f4f9;
+    }
+    .h-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .h-tag { font-size: 10.5px; color: #5c6675; background: #f2f5fa; padding: 3px 8px; border-radius: 6px; }
+    .h-btn {
+      font-size: 12px; font-weight: 600; color: #2563eb; background: #eef4ff;
+      padding: 6px 14px; border-radius: 8px; white-space: nowrap; flex-shrink: 0;
+    }
+
+    .profile-header {
+      background: linear-gradient(150deg, #2563eb 0%, #3b82f6 100%);
+      padding: 20px 22px 26px; border-radius: 0 0 26px 26px; color: #fff;
+      display: flex; align-items: center; gap: 16px; flex-shrink: 0;
+    }
+    .avatar-lg {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(255,255,255,0.22); border: 2px solid rgba(255,255,255,0.55);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 600; flex-shrink: 0;
+    }
+    .p-name { font-size: 19px; font-weight: 700; margin-bottom: 5px; }
+    .p-phone { font-size: 12.5px; opacity: .82; }
+    .profile-body { padding: 18px 20px 20px; }
+    .p-section {
+      background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 14px;
+      box-shadow: 0 2px 12px rgba(20,40,80,0.05);
+    }
+    .p-row {
+      display: flex; align-items: center; padding: 15px 17px;
+      border-bottom: 1px solid #f5f7fb; cursor: pointer; transition: background .15s;
+    }
+    .p-row:last-child { border-bottom: none; }
+    .p-row:active { background: #f7f9fc; }
+    .p-row-icon {
+      width: 32px; height: 32px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; margin-right: 12px; flex-shrink: 0;
+    }
+    .p-row-label { flex: 1; font-size: 14px; color: #1f2937; font-weight: 500; }
+    .p-row-value { font-size: 13px; color: #9aa5b5; margin-right: 8px; }
+
+    .tab-bar {
+      height: 68px; background: #fff; border-top: 1px solid #eef1f6;
+      display: flex; align-items: center; padding-bottom: 8px; flex-shrink: 0;
+      box-shadow: 0 -2px 16px rgba(20,40,80,0.04);
+    }
+    .tab-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer; padding: 6px 0; position: relative; transition: transform .15s;
+    }
+    .tab-item:active { transform: scale(0.92); }
+    .tab-item svg { width: 23px; height: 23px; fill: #b0b8c4; transition: fill .2s; }
+    .tab-item span { font-size: 10.5px; color: #b0b8c4; font-weight: 500; transition: color .2s; }
+    .tab-item.active svg { fill: #2563eb; }
+    .tab-item.active span { color: #2563eb; font-weight: 600; }
+    .tab-item.active::after {
+      content: ''; position: absolute; top: 0; width: 22px; height: 3px;
+      border-radius: 0 0 4px 4px; background: #2563eb;
+    }
+
+    .toast {
+      position: absolute; bottom: 120px; left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: rgba(24,30,40,0.9); color: #fff; font-size: 12.5px;
+      padding: 10px 20px; border-radius: 22px; opacity: 0; pointer-events: none;
+      transition: all .28s; white-space: nowrap; z-index: 100; backdrop-filter: blur(8px);
+      max-width: 86%; white-space: normal; text-align: center; line-height: 1.5;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .sheet-mask {
+      position: absolute; inset: 0; background: rgba(15,23,42,0.42);
+      opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 50; border-radius: 44px;
+    }
+    .sheet-mask.show { opacity: 1; pointer-events: auto; }
+    .sheet {
+      position: absolute; bottom: 0; left: 0; right: 0; background: #fff;
+      border-radius: 24px 24px 44px 44px; padding: 22px 22px 30px;
+      transform: translateY(100%); transition: transform .3s cubic-bezier(.22,1,.36,1);
+      z-index: 51; max-height: 72%; overflow-y: auto;
+    }
+    .sheet.show { transform: translateY(0); }
+    .sheet-bar { width: 38px; height: 4px; border-radius: 2px; background: #e2e8f0; margin: 0 auto 18px; }
+    .sheet h3 { font-size: 17px; font-weight: 700; color: #111827; margin-bottom: 14px; line-height: 1.45; }
+    .sheet p { font-size: 13.5px; color: #5c6675; line-height: 1.85; margin-bottom: 10px; }
+    .sheet .sheet-meta {
+      display: flex; gap: 10px; font-size: 11.5px; color: #9aa5b5;
+      margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #f1f4f9; flex-wrap: wrap;
+    }
+    .sheet-close {
+      width: 100%; padding: 14px; border: none; border-radius: 13px;
+      background: #f2f5fa; color: #2563eb; font-size: 14.5px; font-weight: 600;
+      cursor: pointer; margin-top: 8px; font-family: inherit;
+    }
+    .sheet-close:active { background: #e8ecf3; }
+
+    .prefix-mask {
+      position: absolute; inset: 0; background: rgba(15,23,42,0.42);
+      opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 60; border-radius: 44px;
+    }
+    .prefix-mask.show { opacity: 1; pointer-events: auto; }
+    .prefix-sheet {
+      position: absolute; left: 0; right: 0; bottom: 0; background: #fff;
+      border-radius: 24px 24px 44px 44px; padding: 22px 22px 30px;
+      transform: translateY(100%); transition: transform .3s cubic-bezier(.22,1,.36,1); z-index: 61;
+    }
+    .prefix-sheet.show { transform: translateY(0); }
+    .prefix-head { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 14px; }
+    .prefix-option {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 15px 16px; border-radius: 12px; background: #f7f9fc; margin-bottom: 10px;
+      cursor: pointer; font-size: 14px; color: #1f2937; font-weight: 500;
+      transition: background .15s;
+    }
+    .prefix-option:active { background: #eef2f9; }
+    .prefix-option.active { background: #eef4ff; color: #2563eb; box-shadow: 0 0 0 1.5px #2563eb inset; }
+    .prefix-option .p-code { font-size: 13px; color: #8a94a6; font-weight: 400; }
+    .prefix-option.active .p-code { color: #2563eb; }
+
+    .empty-hint { text-align: center; font-size: 12px; color: #b0b8c4; padding: 30px 0 10px; }
+
+    @media (max-width: 480px) {
+      body { padding: 0; background: #f7f9fc; align-items: stretch; }
+      .phone {
+        width: 100%; height: 100vh; height: 100dvh;
+        border-radius: 0; box-shadow: none;
+      }
+      .notch, .status-bar { display: none; }
+      .sheet-mask, .prefix-mask { border-radius: 0; }
+      .sheet, .prefix-sheet {
+        border-radius: 24px 24px 0 0;
+        padding-bottom: calc(30px + env(safe-area-inset-bottom));
+      }
+      .tab-bar {
+        height: calc(68px + env(safe-area-inset-bottom));
+        padding-bottom: calc(8px + env(safe-area-inset-bottom));
+      }
+      .toast { bottom: calc(120px + env(safe-area-inset-bottom)); }
+      .login-header { margin-top: 46px; }
+    }
+  </style>
+</head>
+<body>
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-right">
+      <span>●●●●</span>
+      <span>▮</span>
+      <span>100%</span>
+    </div>
+  </div>
+
+  <!-- ================= 登录页 ================= -->
+  <div class="page login-page active" id="pageLogin">
+    <div class="login-header">
+      <div class="logo-box">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-4H5v-2h4V7h2v4h4v2h-4v4z"/></svg>
+      </div>
+      <div class="login-title">粤港澳医疗通</div>
+      <div class="login-sub">手机号验证码登录，未注册将自动创建账号</div>
+    </div>
+
+    <div class="input-group">
+      <svg class="input-icon" viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+      <button type="button" class="code-prefix" onclick="openPrefix()">
+        <span id="prefixText">+86</span>
+        <svg class="caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+      </button>
+      <div class="divider-v"></div>
+      <input type="tel" id="phoneInput" placeholder="请输入 11 位手机号" maxlength="11" inputmode="numeric">
+    </div>
+    <div class="phone-hint" id="phoneHint"></div>
+
+    <div class="input-group">
+      <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10z"/></svg>
+      <input type="tel" id="codeInput" placeholder="请输入验证码" maxlength="6" inputmode="numeric">
+      <div class="divider-v"></div>
+      <button class="code-btn" id="codeBtn" disabled>获取验证码</button>
+    </div>
+
+    <div class="agree-row" id="agreeRow">
+      <div class="checkbox" id="agreeBox"></div>
+      <div>我已阅读并同意 <b>《用户协议》</b> 和 <b>《隐私政策》</b></div>
+    </div>
+
+    <button class="login-btn" id="loginBtn" disabled>登 录</button>
+
+    <div class="login-foot">
+      技术支持：粤港澳医疗数据中心<br>
+      遇到问题？联系客服 400-000-0000
+    </div>
+  </div>
+
+  <!-- ================= 医疗资讯 ================= -->
+  <div class="page" id="pageNews">
+    <div class="home-header">
+      <div class="home-title-row">
+        <div class="home-title">医疗资讯</div>
+        <div class="avatar-mini" id="avatarMini" onclick="switchTab(3)">李</div>
+      </div>
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span>搜索资讯、疾病、科室…</span>
+      </div>
+    </div>
+
+    <div class="news-list">
+      <div class="section-label">今日推荐</div>
+
+      <div class="news-card" onclick="openSheet('晨起血压偏高？先别急着加药','高血压','2026-10-18','很多人在清晨测量血压时会发现数值偏高。这其实是人体血压的生理性波动规律——清晨 6 至 10 点交感神经兴奋，血压自然升高。如果收缩压未超过 140mmHg，且没有头晕、胸闷等不适，通常无需自行加药。建议固定时间、静坐 5 分钟后测量，并记录一周数据带给医生评估。')">
+        <div class="news-thumb t-blue">🩺</div>
+        <div class="news-body">
+          <div class="news-title">晨起血压偏高？先别急着加药，看看这三个原因</div>
+          <div class="news-meta">
+            <span class="tag tag-blue">心血管</span>
+            <span>3 分钟前</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="news-card" onclick="openSheet('流感疫苗什么时候打最合适','流感疫苗','2026-10-18','流感疫苗的最佳接种时间是每年 9 至 11 月，接种后约 2 至 4 周产生保护性抗体，正好覆盖冬春季高发期。老年人、儿童、慢性病患者和医务人员属于优先接种人群。接种后可能出现局部酸痛或低热，一般 1 至 2 天自行缓解。')">
+        <div class="news-thumb t-green">💉</div>
+        <div class="news-body">
+          <div class="news-title">流感疫苗什么时候打最合适？医生给出时间表</div>
+          <div class="news-meta">
+            <span class="tag tag-green">预防保健</span>
+            <span>1 小时前</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="news-card" onclick="openSheet('长期熬夜对代谢的真实影响','睡眠健康','2026-10-17','长期睡眠不足 6 小时会干扰瘦素与饥饿素的分泌平衡，让人更容易产生饥饿感，同时降低胰岛素敏感性。这并非单纯“意志力”问题，而是生理机制改变。改善建议：固定起床时间、睡前 1 小时远离屏幕、避免睡前饮酒。')">
+        <div class="news-thumb t-orange">😴</div>
+        <div class="news-body">
+          <div class="news-title">长期熬夜对代谢的真实影响，比你想的更具体</div>
+          <div class="news-meta">
+            <span class="tag tag-orange">健康科普</span>
+            <span>昨天</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="news-card" onclick="openSheet('体检报告上的结节要不要紧','体检解读','2026-10-17','体检中发现的甲状腺结节、肺结节绝大多数为良性。关键看报告中的分级描述：甲状腺 TI-RADS 3 类以下通常定期复查即可；肺结节直径小于 6mm 且边缘光滑，多建议年度随访。真正需要警惕的是短期快速增大、边缘毛刺或伴有临床症状的结节。')">
+        <div class="news-thumb t-purple">📋</div>
+        <div class="news-body">
+          <div class="news-title">体检报告上的“结节”，到底要不要紧？</div>
+          <div class="news-meta">
+            <span class="tag tag-blue">体检解读</span>
+            <span>昨天</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="news-card" onclick="openSheet('港澳居民在内地就医如何结算','跨境就医','2026-10-16','港澳居民在内地就医，可持港澳居民来往内地通行证（回乡证）在部分定点医疗机构直接结算，也可先自费后回港澳报销。建议就医前确认医院是否支持跨境结算，并保留完整病历、发票和费用清单。各地政策存在差异，以当地医保部门最新公告为准。')">
+        <div class="news-thumb t-blue">🌉</div>
+        <div class="news-body">
+          <div class="news-title">港澳居民在内地就医，费用如何结算？</div>
+          <div class="news-meta">
+            <span class="tag tag-blue">跨境就医</span>
+            <span>昨天</span>
+          </div>
+        </div>
+      </div>
+      <div class="empty-hint">—— 已经到底啦 ——</div>
+    </div>
+  </div>
+
+  <!-- ================= 法律法规 ================= -->
+  <div class="page" id="pageLaw">
+    <div class="home-header">
+      <div class="home-title-row">
+        <div class="home-title">法律法规</div>
+        <div class="avatar-mini" onclick="switchTab(3)">李</div>
+      </div>
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span>搜索法规名称、条文…</span>
+      </div>
+    </div>
+
+    <div class="law-tabs">
+      <div class="law-tab active" onclick="switchLawTab(this)">全部</div>
+      <div class="law-tab" onclick="switchLawTab(this)">内地法规</div>
+      <div class="law-tab" onclick="switchLawTab(this)">澳门法规</div>
+      <div class="law-tab" onclick="switchLawTab(this)">香港法规</div>
+      <div class="law-tab" onclick="switchLawTab(this)">跨境政策</div>
+    </div>
+
+    <div class="law-list">
+      <div class="law-item" onclick="openSheet('中华人民共和国基本医疗卫生与健康促进法','内地 · 法律','2020-06-01 施行','是我国卫生健康领域第一部基础性、综合性法律。明确了公民依法享有基本医疗卫生服务的权利，规定医疗卫生机构应当遵循患者知情同意原则，并对医疗卫生人员的执业权益作出保护性规定。全文共十章一百一十条。')">
+        <div class="law-icon">📕</div>
+        <div class="law-body">
+          <div class="law-name">基本医疗卫生与健康促进法</div>
+          <div class="law-desc"><span>内地 · 法律</span><span>·</span><span>2020-06-01 施行</span></div>
+        </div>
+        <div class="arrow">›</div>
+      </div>
+
+      <div class="law-item" onclick="openSheet('中华人民共和国医师法','内地 · 法律','2022-03-01 施行','对医师的资格考试、执业注册、执业规则、培训考核、保障措施及法律责任作出系统规定。其中明确：医师在紧急情况下为抢救生命垂危患者，可先行采取必要的医疗措施；同时规定医师不得利用职务之便索取、非法收受财物。')">
+        <div class="law-icon">📗</div>
+        <div class="law-body">
+          <div class="law-name">中华人民共和国医师法</div>
+          <div class="law-desc"><span>内地 · 法律</span><span>·</span><span>2022-03-01 施行</span></div>
+        </div>
+        <div class="arrow">›</div>
+      </div>
+
+      <div class="law-item" onclick="openSheet('医疗纠纷预防和处理条例','内地 · 行政法规','2018-10-01 施行','规范医疗纠纷的预防、处理流程，明确医患双方的权利义务，建立医疗纠纷人民调解机制，并规定医疗机构应当建立健全医疗质量安全管理、病历管理、医患沟通等制度。')">
+        <div class="law-icon">📘</div>
+        <div class="law-body">
+          <div class="law-name">医疗纠纷预防和处理条例</div>
+          <div class="law-desc"><span>内地 · 行政法规</span><span>·</span><span>2018-10-01 施行</span></div>
+        </div>
+        <div class="arrow">›</div>
+      </div>
+
+      <div class="law-item" onclick="openSheet('澳门特别行政区医疗人员专业资格及执业注册制度','澳门 · 法律','2021-10-01 生效','澳门第 9/2021 号法律，对医生、牙科医生、中医、护士、药剂师等十五类医疗人员的专业资格取得、执业注册、执业权利与义务、纪律责任等作出规定，并设立医疗专业委员会统筹资格认可与注册事务。')">
+        <div class="law-icon">📙</div>
+        <div class="law-body">
+          <div class="law-name">医疗人员专业资格及执业注册制度</div>
+          <div class="law-desc"><span>澳门 · 法律</span><span>·</span><span>2021-10-01 生效</span></div>
+        </div>
+        <div class="arrow">›</div>
+      </div>
+
+      <div class="law-item" onclick="openSheet('香港《医院管理局条例》','香港 · 条例','1990 年制定','设立医院管理局，负责管理及发展香港公立医院体系。条例规定医管局的职能包括提供医院服务、促进医学教育及研究、就公立医院服务的政策向政府提供意见等。')">
+        <div class="law-icon">📓</div>
+        <div class="law-body">
+          <div class="law-name">医院管理局条例</div>
+          <div class="law-desc"><span>香港 · 条例</span><span>·</span><span>1990 年制定</span></div>
+        </div>
+        <div class="arrow">›</div>
+      </div>
+
+      <div class="law-item" onclick="openSheet('香港《中医药条例》','香港 · 条例','1999 年制定','就中医注册、中药商领牌、中药业监管及中医药专业守则等作出规定，并设立香港中医药管理委员会负责执行。')">
+        <div class="law-icon">📔</div>
+        <div class="law-body">
+          <div class="law-name">中医药条例</div>
+          <div class="law-desc"><span>香港 · 条例</span><span>·</span><span>1999 年制定</span></div>
+        </div>
+        <div class="arrow">›</div>
+      </div>
+
+      <div class="law-item" onclick="openSheet('港澳居民在内地就医相关政策','跨境政策','持续更新','港澳居民可持港澳居民来往内地通行证在内地医疗机构就诊；符合条件的可参加内地城乡居民基本医疗保险或职工基本医疗保险。具体参保条件、缴费标准与待遇水平以各地医保部门规定为准。')">
+        <div class="law-icon">🌉</div>
+        <div class="law-body">
+          <div class="law-name">港澳居民在内地就医相关政策</div>
+          <div class="law-desc"><span>跨境政策</span><span>·</span><span>持续更新</span></div>
+        </div>
+        <div class="arrow">›</div>
+      </div>
+      <div class="empty-hint">—— 已经到底啦 ——</div>
+    </div>
+  </div>
+
+  <!-- ================= 三地医院 ================= -->
+  <div class="page" id="pageHospital">
+    <div class="home-header">
+      <div class="home-title-row">
+        <div class="home-title">三地医院</div>
+        <div class="avatar-mini" onclick="switchTab(3)">李</div>
+      </div>
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span>搜索医院、科室、医生…</span>
+      </div>
+    </div>
+
+    <div class="region-tabs" id="regionTabs">
+      <div class="region-tab active" data-region="gd" onclick="switchRegion(this)">广东省</div>
+      <div class="region-tab" data-region="mo" onclick="switchRegion(this)">澳门</div>
+      <div class="region-tab" data-region="hk" onclick="switchRegion(this)">香港</div>
+    </div>
+
+    <div class="hospital-list" id="hospitalList"></div>
+  </div>
+
+  <!-- ================= 我的资料 ================= -->
+  <div class="page" id="pageProfile">
+    <div class="profile-header">
+      <div class="avatar-lg" id="profileAvatar">李</div>
+      <div>
+        <div class="p-name" id="profileName">李小明</div>
+        <div class="p-phone" id="profilePhone">+86 138****8888</div>
+      </div>
+    </div>
+
+    <div class="profile-body">
+      <div class="p-section">
+        <div class="p-row" onclick="toast('打开基本资料编辑')">
+          <div class="p-row-icon" style="background:#eef4ff;">👤</div>
+          <div class="p-row-label">基本资料</div>
+          <div class="p-row-value">姓名、性别、生日</div>
+          <div class="arrow">›</div>
+        </div>
+        <div class="p-row" onclick="toast('打开就诊人管理')">
+          <div class="p-row-icon" style="background:#e6f7ee;">👨‍👩‍👧</div>
+          <div class="p-row-label">就诊人管理</div>
+          <div class="p-row-value">2 人</div>
+          <div class="arrow">›</div>
+        </div>
+        <div class="p-row" onclick="toast('打开我的预约')">
+          <div class="p-row-icon" style="background:#fff3e6;">📅</div>
+          <div class="p-row-label">我的预约</div>
+          <div class="p-row-value">1 条待就诊</div>
+          <div class="arrow">›</div>
+        </div>
+      </div>
+
+      <div class="p-section">
+        <div class="p-row" onclick="toast('打开收藏夹')">
+          <div class="p-row-icon" style="background:#f3e8ff;">⭐</div>
+          <div class="p-row-label">我的收藏</div>
+          <div class="arrow">›</div>
+        </div>
+        <div class="p-row" onclick="toast('打开浏览历史')">
+          <div class="p-row-icon" style="background:#e0f2fe;">🕘</div>
+          <div class="p-row-label">浏览历史</div>
+          <div class="arrow">›</div>
+        </div>
+        <div class="p-row" onclick="toast('打开设置')">
+          <div class="p-row-icon" style="background:#f2f5fa;">⚙️</div>
+          <div class="p-row-label">设置</div>
+          <div class="arrow">›</div>
+        </div>
+      </div>
+
+      <div class="p-section">
+        <div class="p-row" onclick="installApp()">
+          <div class="p-row-icon" style="background:#e0f7ff;">📲</div>
+          <div class="p-row-label">安装到手机</div>
+          <div class="p-row-value">添加到主屏幕</div>
+          <div class="arrow">›</div>
+        </div>
+      </div>
+
+      <div class="p-section">
+        <div class="p-row" onclick="logout()">
+          <div class="p-row-icon" style="background:#fee2e2;">🚪</div>
+          <div class="p-row-label" style="color:#dc2626;">退出登录</div>
+        </div>
+      </div>
+
+      <div class="empty-hint">版本 v1.1.0 · 粤港澳版</div>
+    </div>
+  </div>
+
+  <!-- ================= 底部导航 ================= -->
+  <div class="tab-bar" id="tabBar" style="display:none;">
+    <div class="tab-item active" onclick="switchTab(0)">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 9h-2v2h-2v-2H9v-2h4V7h2v2h2v2z"/></svg>
+      <span>医疗资讯</span>
+    </div>
+    <div class="tab-item" onclick="switchTab(1)">
+      <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+      <span>法律法规</span>
+    </div>
+    <div class="tab-item" onclick="switchTab(2)">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+      <span>三地医院</span>
+    </div>
+    <div class="tab-item" onclick="switchTab(3)">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>我的资料</span>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="sheet-mask" id="sheetMask" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet">
+    <div class="sheet-bar"></div>
+    <h3 id="sheetTitle"></h3>
+    <div class="sheet-meta" id="sheetMeta"></div>
+    <p id="sheetContent"></p>
+    <button class="sheet-close" onclick="closeSheet()">关 闭</button>
+  </div>
+
+  <div class="prefix-mask" id="prefixMask" onclick="closePrefix()"></div>
+  <div class="prefix-sheet" id="prefixSheet">
+    <div class="sheet-bar"></div>
+    <div class="prefix-head">选择国家 / 地区区号</div>
+    <div class="prefix-list" id="prefixList"></div>
+  </div>
+</div>
+
+<script>
+  const REGIONS = {
+    '+86': {
+      name: '中国大陆',
+      len: 11,
+      placeholder: '请输入 11 位手机号',
+      re: /^1[3-9]\d{9}$/,
+      hint: '中国大陆手机号为 11 位；澳门请切换 +853，香港请切换 +852'
+    },
+    '+853': {
+      name: '澳门',
+      len: 8,
+      placeholder: '请输入 8 位手机号',
+      re: /^6\d{7}$/,
+      hint: '澳门手机号为 8 位，通常以 6 开头，需加区号 +853'
+    },
+    '+852': {
+      name: '香港',
+      len: 8,
+      placeholder: '请输入 8 位手机号',
+      re: /^[4-9]\d{7}$/,
+      hint: '香港手机号为 8 位，以 4/5/6/7/9 开头，需加区号 +852'
+    }
+  };
+
+  const HOSPITALS = {
+    gd: {
+      list: [
+        {
+          name: '中山大学附属第一医院', badge: '三甲', icon: '🏥',
+          meta: '三级甲等 · 综合医院', addr: '广州市越秀区中山二路 58 号',
+          tags: ['综合', '国家医学中心'], action: '预约挂号',
+          desc: '始建于 1910 年，是国家卫生健康委直管的大型综合性医院，也是广东省高水平医院建设“登峰计划”首批重点建设单位。在器官移植、重症医学、肾内科、神经内科等领域具有全国影响力，设有多个国家临床重点专科。'
+        },
+        {
+          name: '南方医科大学南方医院', badge: '三甲', icon: '🏥',
+          meta: '三级甲等 · 综合医院', addr: '广州市白云区广州大道北 1838 号',
+          tags: ['综合', '教学医院'], action: '预约挂号',
+          desc: '创建于 1941 年，是南方医科大学第一附属医院。在消化内科、感染内科、骨科、整形外科等学科具有较强实力，设有国家临床重点专科多个，承担大量疑难重症救治任务。'
+        },
+        {
+          name: '广东省人民医院', badge: '三甲', icon: '🏥',
+          meta: '三级甲等 · 综合医院', addr: '广州市越秀区中山二路 106 号',
+          tags: ['心血管', '老年医学'], action: '预约挂号',
+          desc: '广东省最大的综合性医院之一，心血管内科、心外科、老年医学在国内具有较高声誉。设有广东省心血管病研究所，是华南地区心血管疾病诊疗的重要中心。'
+        },
+        {
+          name: '广州医科大学附属第一医院', badge: '三甲', icon: '🏥',
+          meta: '三级甲等 · 综合医院', addr: '广州市荔湾区沿江西路 151 号',
+          tags: ['呼吸科', '胸外科'], action: '预约挂号',
+          desc: '以呼吸系统疾病诊疗闻名，广州呼吸健康研究院设于院内，在慢阻肺、哮喘、肺部感染、肺癌等方向具有国际影响力。同时是国家呼吸医学中心依托单位。'
+        },
+        {
+          name: '中山大学肿瘤防治中心', badge: '三甲', icon: '🏥',
+          meta: '三级甲等 · 专科医院', addr: '广州市越秀区东风东路 651 号',
+          tags: ['肿瘤专科', '科研机构'], action: '预约挂号',
+          desc: '华南地区规模最大的肿瘤专科医院，集医疗、教学、科研、预防于一体。在鼻咽癌、肝癌、肺癌、乳腺癌等常见肿瘤的规范化诊疗方面具有权威地位。'
+        }
+      ]
+    },
+    mo: {
+      list: [
+        {
+          name: '仁伯爵综合医院（山顶医院）', badge: '公立', icon: '🏥',
+          meta: '公立 · 综合医院', addr: '澳门半岛东望洋斜巷',
+          tags: ['公立', '急诊 24h'], action: '预约门诊',
+          desc: '澳门卫生局辖下规模最大的公立综合医院，为全澳居民提供急诊、住院、专科门诊等服务。急诊科 24 小时运作，是澳门主要的急重症救治中心。非澳门居民就诊需按非本地居民收费标准缴费。'
+        },
+        {
+          name: '镜湖医院', badge: '私立', icon: '🏥',
+          meta: '私立 · 综合医院', addr: '澳门半岛连胜街',
+          tags: ['私立', '百年历史'], action: '预约门诊',
+          desc: '创办于 1871 年，是澳门历史最悠久的华人慈善医院，现为私立综合医院。设有内科、外科、妇产科、儿科等科室，同时承担部分公立医疗服务的补充职能。'
+        },
+        {
+          name: '澳门科技大学医院', badge: '私立', icon: '🏥',
+          meta: '私立 · 综合医院', addr: '澳门氹仔伟龙马路',
+          tags: ['私立', '教学医院'], action: '预约门诊',
+          desc: '由澳门科技大学设立，集医疗、教学、科研于一体，是澳门重要的教学医院之一。提供中西医结合诊疗服务，并承担医学人才培养任务。'
+        },
+        {
+          name: '离岛医疗综合体（澳门协和医院）', badge: '公立', icon: '🏥',
+          meta: '公立 · 综合医院', addr: '澳门路氹城莲花路',
+          tags: ['公立', '新建院区'], action: '预约门诊',
+          desc: '澳门特区政府与北京协和医院合作建设的公立医疗综合体，位于路氹城。定位为提升澳门疑难重症诊治能力，逐步引入协和医院的专科团队与技术标准。'
+        }
+      ]
+    },
+    hk: {
+      list: [
+        {
+          name: '玛丽医院', badge: '公立', icon: '🏥',
+          meta: '公立 · 综合医院', addr: '香港岛薄扶林道 102 号',
+          tags: ['公立', '港岛西联网'], action: '预约诊症',
+          desc: '香港历史最悠久的公立医院之一，隶属医院管理局港岛西联网，是香港大学李嘉诚医学院的教学医院。在器官移植、心脏科、肿瘤科、儿科等领域具有领先地位。'
+        },
+        {
+          name: '威尔斯亲王医院', badge: '公立', icon: '🏥',
+          meta: '公立 · 综合医院', addr: '新界沙田银城街 30-32 号',
+          tags: ['公立', '教学医院'], action: '预约诊症',
+          desc: '香港中文大学医学院的教学医院，隶属新界东联网，是新界东地区的主要急症医院。在创伤救治、骨科、肿瘤科、儿科等方面实力突出。'
+        },
+        {
+          name: '伊利沙伯医院', badge: '公立', icon: '🏥',
+          meta: '公立 · 综合医院', addr: '九龙油麻地加士居道 30 号',
+          tags: ['公立', '急诊 24h'], action: '预约诊症',
+          desc: '九龙中联网的主要急症医院，位于九龙市中心，交通便利。设有 24 小时急症室，是香港重要的创伤救治与急重症中心之一。'
+        },
+        {
+          name: '香港养和医院', badge: '私立', icon: '🏥',
+          meta: '私立 · 综合医院', addr: '香港岛跑马地黄泥涌道 2-4 号',
+          tags: ['私立', '高端医疗'], action: '预约诊症',
+          desc: '香港知名的私立综合医院，创办于 1922 年。提供高端专科诊疗、体检及住院服务，在肿瘤科、心脏科、妇产科等领域具有良好口碑。'
+        },
+        {
+          name: '香港中文大学医院', badge: '私立', icon: '🏥',
+          meta: '私立 · 综合医院', addr: '新界沙田泽祥街 9 号',
+          tags: ['私立', '教学医院'], action: '预约诊症',
+          desc: '由香港中文大学设立的私立教学医院，2021 年启用。强调循证医疗与透明收费，提供门诊、日间手术、住院及健康检查等服务。'
+        }
+      ]
+    }
+  };
+
+  const state = {
+    prefix: '+86',
+    phone: '',
+    code: '',
+    agreed: false,
+    countdown: 0,
+    timer: null,
+    sentTo: '',
+    loggedIn: false
+  };
+
+  const el = id => document.getElementById(id);
+  const phoneInput = el('phoneInput');
+  const codeInput = el('codeInput');
+  const codeBtn = el('codeBtn');
+  const loginBtn = el('loginBtn');
+  const agreeBox = el('agreeBox');
+
+  function buildPrefixList() {
+    el('prefixList').innerHTML = Object.entries(REGIONS).map(([code, r]) => `
+      <div class="prefix-option ${code === state.prefix ? 'active' : ''}" data-code="${code}">
+        <span>${r.name}</span>
+        <span class="p-code">${code}</span>
+      </div>
+    `).join('');
+  }
+
+  el('prefixList').addEventListener('click', e => {
+    const opt = e.target.closest('.prefix-option');
+    if (!opt) return;
+    setPrefix(opt.dataset.code);
+    closePrefix();
+  });
+
+  function openPrefix() {
+    buildPrefixList();
+    el('prefixMask').classList.add('show');
+    el('prefixSheet').classList.add('show');
+  }
+  function closePrefix() {
+    el('prefixMask').classList.remove('show');
+    el('prefixSheet').classList.remove('show');
+  }
+
+  function setPrefix(code) {
+    if (!REGIONS[code] || code === state.prefix) return;
+    state.prefix = code;
+    const r = REGIONS[code];
+    el('prefixText').textContent = code;
+    phoneInput.maxLength = r.len;
+    phoneInput.placeholder = r.placeholder;
+    phoneInput.value = '';
+    codeInput.value = '';
+    el('phoneHint').textContent = r.hint;
+    clearInterval(state.timer);
+    state.timer = null;
+    state.countdown = 0;
+    state.sentTo = '';
+    refresh();
+    toast('已切换到 ' + r.name + ' ' + code);
+  }
+
+  const validPhone = v => REGIONS[state.prefix].re.test(v);
+
+  function refresh() {
+    state.phone = phoneInput.value.trim();
+    state.code = codeInput.value.trim();
+
+    const key = state.prefix + '|' + state.phone;
+    if (state.sentTo && state.sentTo !== key) {
+      clearInterval(state.timer);
+      state.timer = null;
+      state.countdown = 0;
+      state.sentTo = '';
+    }
+
+    if (state.countdown > 0) {
+      codeBtn.disabled = true;
+      codeBtn.textContent = state.countdown + 's 后重发';
+    } else {
+      codeBtn.disabled = !validPhone(state.phone);
+      codeBtn.textContent = '获取验证码';
+    }
+
+    loginBtn.disabled = !(validPhone(state.phone) && state.code.length >= 4 && state.agreed);
+  }
+
+  phoneInput.addEventListener('input', e => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, REGIONS[state.prefix].len);
+    refresh();
+  });
+  codeInput.addEventListener('input', e => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+    refresh();
+  });
+
+  el('agreeRow').addEventListener('click', () => {
+    state.agreed = !state.agreed;
+    agreeBox.classList.toggle('checked', state.agreed);
+    refresh();
+  });
+
+  codeBtn.addEventListener('click', async () => {
+    if (state.countdown > 0 || !validPhone(state.phone)) return;
+
+    codeBtn.disabled = true;
+    codeBtn.textContent = '发送中…';
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 600));
+
+      state.sentTo = state.prefix + '|' + state.phone;
+      state.countdown = 60;
+      refresh();
+      toast('验证码已发送至 ' + state.prefix + ' ' + maskNumber(state.phone) +
+            '（演示环境：任意 4 位以上数字可登录）');
+
+      clearInterval(state.timer);
+      state.timer = setInterval(() => {
+        state.countdown--;
+        if (state.countdown <= 0) {
+          clearInterval(state.timer);
+          state.timer = null;
+          state.countdown = 0;
+        }
+        refresh();
+      }, 1000);
+    } catch (err) {
+      codeBtn.disabled = false;
+      codeBtn.textContent = '获取验证码';
+      toast('验证码发送失败，请稍后重试');
+    }
+  });
+
+  loginBtn.addEventListener('click', () => {
+    if (!state.agreed) { toast('请先阅读并同意用户协议'); return; }
+
+    loginBtn.textContent = '登录中…';
+    setTimeout(() => {
+      state.loggedIn = true;
+
+      const masked = state.prefix + ' ' + maskNumber(state.phone);
+      el('profilePhone').textContent = masked;
+      el('profileAvatar').textContent = state.phone.slice(-1);
+      el('profileName').textContent = '用户' + state.phone.slice(-4);
+      el('avatarMini').textContent = state.phone.slice(-1);
+
+      el('pageLogin').classList.remove('active');
+      el('tabBar').style.display = 'flex';
+      switchTab(0);
+      loginBtn.textContent = '登 录';
+      toast('登录成功，欢迎使用粤港澳医疗通');
+    }, 700);
+  });
+
+  function maskNumber(p) {
+    if (state.prefix === '+86') {
+      return p.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+    }
+    return p.slice(0, 2) + '****' + p.slice(-2);
+  }
+
+  function logout() {
+    clearInterval(state.timer);
+    state.timer = null;
+    state.countdown = 0;
+    state.sentTo = '';
+
+    el('tabBar').style.display = 'none';
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    el('pageLogin').classList.add('active');
+    codeInput.value = '';
+    state.code = '';
+    state.agreed = false;
+    agreeBox.classList.remove('checked');
+    loginBtn.textContent = '登 录';
+    refresh();
+    toast('已退出登录');
+  }
+
+  const pages = ['pageNews', 'pageLaw', 'pageHospital', 'pageProfile'];
+  function switchTab(idx) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    el(pages[idx]).classList.add('active');
+    document.querySelectorAll('.tab-item').forEach((t, i) => {
+      t.classList.toggle('active', i === idx);
+    });
+  }
+
+  function renderHospitals(key) {
+    const data = HOSPITALS[key];
+    const box = el('hospitalList');
+    box.innerHTML = data.list.map((h, i) => `
+      <div class="hospital-card" data-region="${key}" data-index="${i}">
+        <div class="h-top">
+          <div class="h-logo">${h.icon}</div>
+          <div class="h-info">
+            <div class="h-name">${h.name} <span class="h-level">${h.badge}</span></div>
+            <div class="h-addr">${h.addr}</div>
+          </div>
+        </div>
+        <div class="h-bottom">
+          <div class="h-tags">${h.tags.map(t => `<span class="h-tag">${t}</span>`).join('')}</div>
+          <div class="h-btn">${h.action}</div>
+        </div>
+      </div>
+    `).join('') + `<div class="empty-hint">—— 已显示全部 ${data.list.length} 家 ——</div>`;
+  }
+
+  el('hospitalList').addEventListener('click', e => {
+    const card = e.target.closest('.hospital-card');
+    if (!card) return;
+    const h = HOSPITALS[card.dataset.region].list[Number(card.dataset.index)];
+    openSheet(h.name, h.meta, h.addr, h.desc);
+  });
+
+  function switchRegion(node) {
+    document.querySelectorAll('.region-tab').forEach(t => t.classList.remove('active'));
+    node.classList.add('active');
+    renderHospitals(node.dataset.region);
+    toast('已切换到：' + node.textContent);
+  }
+
+  function switchLawTab(node) {
+    document.querySelectorAll('.law-tab').forEach(t => t.classList.remove('active'));
+    node.classList.add('active');
+    toast('筛选：' + node.textContent);
+  }
+
+  let toastTimer = null;
+  function toast(msg) {
+    const t = el('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function openSheet(title, meta1, meta2, content) {
+    el('sheetTitle').textContent = title;
+    el('sheetMeta').innerHTML = `<span>${meta1}</span><span>·</span><span>${meta2}</span>`;
+    el('sheetContent').textContent = content;
+    el('sheetMask').classList.add('show');
+    el('sheet').classList.add('show');
+  }
+  function closeSheet() {
+    el('sheetMask').classList.remove('show');
+    el('sheet').classList.remove('show');
+  }
+
+  let deferredPrompt = null;
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+
+  async function installApp() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      if (outcome === 'accepted') toast('已开始安装到主屏幕');
+      return;
+    }
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const guide = isIOS
+      ? '① 用 Safari 打开本页 → ② 点击底部「分享」按钮 → ③ 选择「添加到主屏幕」→ ④ 确认后即可从桌面图标打开，全屏运行。'
+      : '① 用 Chrome 或其他现代浏览器打开本页 → ② 点击右上角菜单（⋮）→ ③ 选择「添加到主屏幕」或「安装应用」→ ④ 确认后即可从桌面图标打开，全屏运行。';
+    openSheet('安装到手机', '添加到主屏幕', '全屏运行', guide + '\n\n若菜单中没有该选项，请确认页面是通过 https 或 localhost 访问。');
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  (function init() {
+    el('prefixText').textContent = state.prefix;
+    phoneInput.maxLength = REGIONS[state.prefix].len;
+    phoneInput.placeholder = REGIONS[state.prefix].placeholder;
+    el('phoneHint').textContent = REGIONS[state.prefix].hint;
+    renderHospitals('gd');
+    refresh();
+  })();
+</script>
+</body>
+</html>
