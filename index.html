@@ -43,11 +43,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 .ig input{border:none;outline:none;flex:1;font-size:16px;padding:16px 0;background:transparent;font-family:inherit}
 .pb{display:flex;align-items:center;gap:2px;background:transparent;border:none;font-size:16px;font-weight:600;color:var(--tx);cursor:pointer}
 .dv{width:1px;height:24px;background:#e5e7eb;margin:0 12px}
-.ar{display:flex;align-items:flex-start;gap:10px;margin:20px 0 28px;font-size:13px;color:var(--tx2);cursor:pointer;line-height:1.6}
-.ar b{color:var(--p);font-weight:500}
-.cbx{width:20px;height:20px;border-radius:50%;border:2px solid #cbd5e1;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s}
+.ar{display:flex;align-items:flex-start;gap:10px;margin:20px 0 28px;font-size:13px;color:var(--tx2);line-height:1.6}
+.cbx{width:20px;height:20px;border-radius:50%;border:2px solid #cbd5e1;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s;cursor:pointer;margin-top:1px}
 .cbx.ckd{background:var(--p);border-color:var(--p)}
 .cbx.ckd::after{content:'';width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.protocol-link{color:var(--p);font-weight:500;cursor:pointer;display:inline-block;padding:2px 4px;margin:-2px -4px;border-radius:4px}
+.protocol-link:active{background:#eef4ff}
 .cb{border:none;background:transparent;color:var(--p);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;padding:8px 0}
 .cb:disabled{color:#cbd5e1}
 .hd{background:var(--card);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.02);z-index:5}
@@ -130,7 +131,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
   <div class="screen" id="scLogin"><div class="page login"><div class="lh"><div class="app-t">登录账号</div><div class="app-s" id="loginHint" style="margin-top:6px">当前身份：老人端</div></div>
     <div class="ig"><button class="pb" onclick="toast('演示环境，区号固定')">+86 ▾</button><div class="dv"></div><input id="phoneIn" type="tel" placeholder="请输入手机号" maxlength="11" inputmode="numeric"></div>
     <div class="ig"><input id="codeIn" type="tel" placeholder="请输入验证码" maxlength="6" inputmode="numeric"><div class="dv"></div><button class="cb" id="codeBtn" disabled onclick="sendCode()">获取验证码</button></div>
-    <div class="ar" onclick="toggleAgree()"><div class="cbx" id="agreeBox"></div><div>我已阅读并同意 <b onclick="event.stopPropagation();openAg('user')">《用户协议》</b> 和 <b onclick="event.stopPropagation();openAg('privacy')">《隐私政策》</b></div></div>
+    <div class="ar">
+      <div class="cbx" id="agreeBox" onclick="toggleAgree()"></div>
+      <div>我已阅读并同意 <span class="protocol-link" onclick="openAg('user')">《用户协议》</span> 和 <span class="protocol-link" onclick="openAg('privacy')">《隐私政策》</span></div>
+    </div>
     <button class="btn btn-p" id="loginBtn" disabled onclick="doLogin()">登 录</button>
     <div style="text-align:center;margin-top:40px;font-size:12px;color:#9ca3af">演示环境：任意手机号 + 任意4位验证码</div>
   </div></div>
