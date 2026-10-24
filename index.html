@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Carelink · 角色版</title>
   
+  <!-- ===== PWA 相关 Meta ===== -->
   <meta name="theme-color" content="#2563eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -44,6 +45,7 @@
       flex-direction: column;
       overflow: hidden;
     }
+    /* 屏幕切换 */
     .screen {
       position: absolute;
       inset: 0;
@@ -61,6 +63,7 @@
       pointer-events: auto;
       z-index: 2;
     }
+    /* 通用按钮 */
     .btn {
       border: none;
       border-radius: 14px;
@@ -99,6 +102,7 @@
     }
     .btn-block { width: 100%; }
 
+    /* 语言/角色选择页 */
     .lang-page, .role-page, .login-page {
       padding: 40px 24px;
       justify-content: center;
@@ -135,6 +139,7 @@
     .option-desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
     .check-icon { color: var(--primary); font-weight: 700; font-size: 18px; }
 
+    /* 登录页 */
     .login-page { padding-top: 60px; justify-content: flex-start; }
     .login-header { margin-bottom: 32px; }
     .input-group {
@@ -184,6 +189,7 @@
     }
     .code-btn:disabled { color: #cbd5e1; }
 
+    /* App 主界面 */
     #screenApp { background: var(--bg); }
     .app-header {
       background: var(--card);
@@ -201,6 +207,7 @@
       padding: 4px 10px; border-radius: 12px; font-weight: 600;
     }
     
+    /* 🔴 全局悬浮 SOS 图标 */
     .global-sos-btn {
       position: absolute;
       top: 58px;
@@ -242,6 +249,7 @@
     }
     .app-content::-webkit-scrollbar { display: none; }
 
+    /* 底部导航 */
     .app-tabbar {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -271,6 +279,7 @@
       background: var(--primary);
     }
 
+    /* 卡片 */
     .card {
       background: var(--card);
       border-radius: 18px;
@@ -299,6 +308,7 @@
     .badge-orange { background: #ffedd5; color: #9a3412; }
     .badge-red { background: #fee2e2; color: #991b1b; }
 
+    /* 弹窗 */
     .modal-mask {
       position: fixed; inset: 0; background: rgba(15,23,42,0.6);
       opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 100;
@@ -316,28 +326,8 @@
     .modal-box.show { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
     .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
     .modal-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
-
-    /* 协议弹窗专用样式 */
-    .agreement-box {
-      text-align: left;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-    }
-    .agreement-content {
-      flex: 1;
-      overflow-y: auto;
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 16px;
-      padding-right: 8px;
-    }
-    .agreement-content h3 { font-size: 15px; color: var(--text); margin: 16px 0 8px; }
-    .agreement-content p { margin-bottom: 10px; }
-    .agreement-content b { color: var(--text); }
     
+    /* SOS 全屏动画 */
     .sos-overlay {
       position: fixed; inset: 0; z-index: 200;
       background: linear-gradient(180deg, #991b1b 0%, #450a0a 100%);
@@ -367,6 +357,7 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.2);
     }
 
+    /* 医院列表 */
     .hospital-item {
       display: flex; align-items: center; gap: 14px;
       padding: 14px 0; border-bottom: 1px solid var(--border);
@@ -385,6 +376,7 @@
       text-decoration: none; padding: 6px 12px; background: #eef4ff; border-radius: 8px;
     }
 
+    /* 提示 */
     .toast {
       position: fixed; bottom: 120px; left: 50%;
       transform: translateX(-50%) translateY(16px);
@@ -396,6 +388,7 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    /* 桌面适配 */
     @media (min-width: 480px) {
       body { align-items: center; background: #cbd5e1; padding: 20px; }
       .app-container {
@@ -410,6 +403,7 @@
 <body>
 <div class="app-container" id="appContainer">
 
+  <!-- ========== 1. 语言选择页 ========== -->
   <div class="screen active" id="screenLanguage">
     <div class="lang-page">
       <div class="logo-area">
@@ -444,6 +438,7 @@
     </div>
   </div>
 
+  <!-- ========== 2. 角色选择页 ========== -->
   <div class="screen" id="screenRole">
     <div class="role-page">
       <div class="logo-area" style="margin-bottom: 30px;">
@@ -470,6 +465,7 @@
     </div>
   </div>
 
+  <!-- ========== 3. 登录页 ========== -->
   <div class="screen" id="screenLogin">
     <div class="login-page">
       <div class="login-header">
@@ -487,10 +483,9 @@
         <input type="tel" id="codeInput" placeholder="请输入验证码" maxlength="6" inputmode="numeric">
         <button class="code-btn" id="codeBtn" disabled onclick="sendCode()">获取验证码</button>
       </div>
-      <!-- 协议点击事件 -->
       <div class="agree-row" id="agreeRow" onclick="toggleAgree()">
         <div class="checkbox" id="agreeBox"></div>
-        <div>我已阅读并同意 <b onclick="event.stopPropagation(); openAgreement('user')">《用户协议》</b> 和 <b onclick="event.stopPropagation(); openAgreement('privacy')">《隐私政策》</b></div>
+        <div>我已阅读并同意 <b>《用户协议》</b> 和 <b>《隐私政策》</b></div>
       </div>
       <button class="btn btn-primary btn-block" id="loginBtn" disabled onclick="doLogin()">登 录</button>
       <div style="text-align:center; margin-top: 40px; font-size: 12px; color: #9ca3af;">
@@ -499,6 +494,7 @@
     </div>
   </div>
 
+  <!-- ========== 4. App 主界面 ========== -->
   <div class="screen" id="screenApp">
     <header class="app-header">
       <div class="header-title" id="appHeaderTitle">扫码授权</div>
@@ -507,6 +503,7 @@
       </div>
     </header>
 
+    <!-- 全局悬浮 SOS 按钮 (仅老人端显示) -->
     <button class="global-sos-btn" id="headerSOSBtn" onclick="openSOS()">
       SOS
       <span>一键求助</span>
@@ -532,14 +529,6 @@
   <button class="btn btn-outline btn-block" style="margin-top: 10px;" onclick="closeModal('modalScan')">取消</button>
 </div>
 
-<!-- 弹窗：协议查看 -->
-<div class="modal-mask" id="modalAgreementMask" onclick="closeAgreement()"></div>
-<div class="modal-box agreement-box" id="modalAgreement">
-  <div class="modal-title" id="agreementTitle">用户协议</div>
-  <div class="agreement-content" id="agreementContent"></div>
-  <button class="btn btn-primary btn-block" onclick="closeAgreement()">我已阅读</button>
-</div>
-
 <!-- 弹窗：切换身份验证 -->
 <div class="modal-mask" id="modalSwitchMask" onclick="closeSwitchModal()"></div>
 <div class="modal-box" id="modalSwitch">
@@ -562,183 +551,10 @@
   <button class="sos-cancel" onclick="cancelSOS()">取消求助</button>
 </div>
 
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-  /* ============================================================
-   * 协议多语言内容库（基于提供的文档提炼）
-   * ============================================================ */
-  const PROTOCOLS = {
-    zh: `
-      <h3>第一部分 | 协议生成规则</h3>
-      <p>系统根据用户选择，确定以下六条路径之一：001 中国内地→香港；002 中国内地→澳门；003 香港→澳门；004 澳门→香港；005 香港→中国内地；006 澳门→中国内地。协议由通用条款（1-12条）及对应路径特别条款（13-16条）共同组成。</p>
-      
-      <h3>第二部分 | 协议首页固定内容</h3>
-      <p>《跨境就医个人信息及健康医疗资料传输协议》<br>
-      版本号：系统显示当前版本号<br>
-      生效日期：系统显示当前生效日期<br>
-      本次授权编号：系统自动生成唯一编号<br>
-      跨境路径：系统直接显示“始发地 → 接收地”<br>
-      授权有效期：系统直接显示起止日期和时间</p>
-      
-      <h3>第三部分 | 十二条通用条款</h3>
-      <p><b>第1条 | 本次跨境医疗服务</b><br>您正在申请跨境预约挂号、转诊、远程会诊等服务。为了使接收医疗机构了解您的身体状况并提供连续、安全的医疗服务，系统需要将列明的身份资料和健康医疗资料传输至接收医疗机构。本次授权仅适用于当前显示的就诊申请，不构成对其他医院或未来医疗服务的长期授权。</p>
-      <p><b>第2条 | 患者、代理者及代理资格</b><br>本次资料所涉及的患者，是页面显示姓名、出生日期、证件类型的自然人。由他人代办操作的，代办人应完成身份核验，并确认已经取得患者明确授权。</p>
-      <p><b>第3条 | 资料提供方及平台运营方</b><br>本次资料提供方为页面显示法定全称的医疗机构。平台运营方如参与资料检索等，系统会显示其法定全称及联系方式。</p>
-      <p><b>第4条 | 接收医疗机构</b><br>本次接收方仅限为本页面显示法定全称的医疗机构。未经重新授权，资料不得提供给未列明的其他机构。</p>
-      <p><b>第5条 | 处理目的及禁止用途</b><br>接收医疗机构仅可为核实患者身份、完成预约、了解病史、辅助诊断等本次诊疗相关目的处理资料。未经另行合法授权，不得用于广告、营销、保险推介、信用评估等不相容目的。</p>
-      <p><b>第6条 | 身份、预约及照护资料</b><br>可能传输的资料包括姓名、证件号、病历号、预约科室、紧急联系人等。系统必须逐项显示本次实际传输的项目，未被勾选的项目不得传输。</p>
-      <p><b>第7条 | 敏感健康医疗资料</b><br>敏感健康资料包括主诉、病史、用药、检验报告等。系统不得默认选择全部病历，只能选择本次诊疗确有必要项目。</p>
-      <p><b>第8条 | 传输方式及访问人员</b><br>资料应通过加密接口传输，不得通过普通邮件等发送。仅限直接参与诊疗的人员访问。每次访问均应记录人员、时间和资料范围。</p>
-      <p><b>第9条 | 访问期限、保存期限及删除</b><br>在线查阅权限原则上从预约前7日开始，就诊结束后30日自动关闭。临时文件应在用途完成后30日内删除。</p>
-      <p><b>第10条 | 安全措施、受托处理及再提供</b><br>三方应采取加密、访问控制等安全措施。未经新的合法依据，不得将资料继续提供给其他机构。</p>
-      <p><b>第11条 | 患者权利、撤回及投诉</b><br>患者可查看资料清单和访问记录，并可停止尚未发生的后续传输。撤回同意不影响撤回前已完成的合法处理。</p>
-      <p><b>第12条 | 资料安全事件</b><br>发生泄露等事件时，相关机构应立即采取补救措施，并依法通知患者和监管机关。</p>
-      
-      <h3>第四部分 | 六条路径特别条款</h3>
-      <p><b>协议一 | 中国内地 → 香港</b><br>
-      第13条 | 适用制度与跨境机制：资料提供方应依照《个人信息保护法》履行出境告知等义务。双方符合条件时，可采用大湾区标准合同。<br>
-      第14条 | 接收后的访问安排：香港接收医院只能让参与诊疗的医护人员访问，每次访问后通知患者。<br>
-      第15条 | 法律差异提示：两地法律和医疗记录制度存在差异。<br>
-      第16条 | 最终单独同意：本人确认阅读并单独同意将资料传输至香港医疗机构。</p>
-      <p>（其他路径协议二至协议六的条款结构与协议一相似，具体文本依据系统实际路径呈现。）</p>
-      
-      <h3>第五部分 | 最终签署页面</h3>
-      <p>最终授权汇总：包括患者姓名、代办人信息、资料提供方、接收医疗机构、接收科室、传输清单、诊疗目的、访问起止时间、撤回授权入口等。<br>
-      三个独立勾选框：<br>
-      1. 我已逐条阅读并理解本协议。<br>
-      2. 我单独同意本次个人信息跨境传输。<br>
-      3. 我另行同意传输本页面逐项列明的健康医疗敏感个人信息。<br>
-      4. 我是患者本人，或已取得患者明确授权／依法具有代为决定资格。</p>
-    `,
-    en: `
-      <h3>Part 1 | Protocol Generation Rules</h3>
-      <p>The system determines one of six routes: 001 Mainland→HK; 002 Mainland→Macao; 003 HK→Macao; 004 Macao→HK; 005 HK→Mainland; 006 Macao→Mainland. The protocol consists of General Clauses (1-12) and Route-specific Clauses (13-16).</p>
-      
-      <h3>Part 2 | Fixed Content on the First Page</h3>
-      <p>Cross-Boundary Medical Information and Health Data Transfer Agreement<br>
-      Version: Current version<br>
-      Effective Date: Current effective date<br>
-      Authorization No.: Unique number generated by the system<br>
-      Route: Origin → Destination<br>
-      Validity Period: Start and end date/time</p>
-      
-      <h3>Part 3 | 12 General Clauses</h3>
-      <p><b>Clause 1 | Current Cross-Boundary Medical Service</b><br>You are applying for cross-boundary appointment, referral, teleconsultation, etc. The system needs to transfer the listed identity and health information to the recipient medical institution. This authorization applies only to the current episode of care.</p>
-      <p><b>Clause 2 | Patient, Representative and Capacity</b><br>The patient is the natural person whose name and DOB are displayed. A representative acting for the patient must verify their identity and confirm valid authorization.</p>
-      <p><b>Clause 3 | Transferor and Platform Operator</b><br>The transferor is the medical institution displayed on this page. If the platform operator participates, its legal identity and contact will also be displayed.</p>
-      <p><b>Clause 4 | Recipient Medical Institution</b><br>The recipient is limited to the medical institution identified on this page. Without renewed authorization, information must not be disclosed to other institutions.</p>
-      <p><b>Clause 5 | Processing Purpose and Prohibited Uses</b><br>The recipient may process the information only to verify identity, complete appointments, review allergies, support diagnosis, etc. Without separate authorization, it must not be used for advertising, marketing, or unrelated AI training.</p>
-      <p><b>Clause 6 | Identity, Appointment and Care Information</b><br>Information may include name, document number, medical record number, appointment department, emergency contact, etc. Unselected items must not be transferred.</p>
-      <p><b>Clause 7 | Sensitive Health Information</b><br>Sensitive health information includes complaints, medical history, medication, test reports, etc. The system must not select the complete record by default.</p>
-      <p><b>Clause 8 | Transmission and Access</b><br>Information must be transmitted through encrypted interfaces. Access is restricted to healthcare professionals involved in the care. Every access must be logged.</p>
-      <p><b>Clause 9 | Access, Retention and Deletion</b><br>Online access ordinarily begins 7 days before the appointment and closes 30 days after the episode of care. Temporary files must be deleted within 30 days.</p>
-      <p><b>Clause 10 | Security, Processors and Onward Transfer</b><br>The parties must apply encryption and access controls. No onward transfer is permitted without a new lawful basis.</p>
-      <p><b>Clause 11 | Patient Rights, Withdrawal and Complaints</b><br>The patient may view the data list and access history, and stop future transfers. Withdrawal does not affect prior lawful processing.</p>
-      <p><b>Clause 12 | Data Security Incidents</b><br>In case of a breach, relevant institutions must take remedial action and notify the patient and regulators as required by law.</p>
-      
-      <h3>Part 4 | Route-Specific Clauses</h3>
-      <p><b>Route 1 | Mainland → HK</b><br>
-      Clause 13 | Applicable Regimes and Cross-Boundary Mechanism: The transferor must comply with PIPL. Where eligible, the GBA Standard Contract may be used.<br>
-      Clause 14 | Access Arrangements in HK: The HK recipient may allow access only to verified professionals involved in the care, and must notify the patient after each access.<br>
-      Clause 15 | Legal Differences: Differences exist in terminology, regulators, and medical record systems.<br>
-      Clause 16 | Final Separate Consent: I confirm I have read and separately consent to the transfer to the HK institution.</p>
-      <p>(Routes 2 to 6 follow a similar structure, with specific legal requirements for each route.)</p>
-      
-      <h3>Part 5 | Final Signature Page</h3>
-      <p>Final Authorization Summary: Patient name, representative, transferor, recipient, department, data list, purpose, access period, withdrawal channel, etc.<br>
-      Three checkboxes:<br>
-      1. I have read and understood this agreement.<br>
-      2. I separately consent to the cross-boundary transfer.<br>
-      3. I separately consent to the sensitive health information transfer.<br>
-      4. I am the patient or have valid authorization.</p>
-    `,
-    pt: `
-      <h3>Parte 1 | Regras de Geração do Protocolo</h3>
-      <p>O sistema determina uma das seis rotas: 001 China Continental→HK; 002 China Continental→Macau; 003 HK→Macau; 004 Macau→HK; 005 HK→China Continental; 006 Macau→China Continental. O protocolo é composto pelas Cláusulas Gerais (1-12) e Cláusulas Específicas da Rota (13-16).</p>
-      
-      <h3>Parte 2 | Conteúdo Fixo da Primeira Página</h3>
-      <p>Acordo de Transferência de Informações Pessoais e Dados de Saúde para Cuidados Transfronteiriços<br>
-      Versão: Versão atual<br>
-      Data de Entrada em Vigor: Data atual<br>
-      N.º de Autorização: Número único gerado<br>
-      Rota: Origem → Destino<br>
-      Período de Validade: Data/hora de início e fim</p>
-      
-      <h3>Parte 3 | 12 Cláusulas Gerais</h3>
-      <p><b>Cláusula 1 | Serviço Médico Transfronteiriço Atual</b><br>Está a solicitar marcação, referenciação, teleconsulta, etc. O sistema necessita de transferir os dados de identificação e saúde para a instituição destinatária. Esta autorização aplica-se apenas ao episódio de cuidados atual.</p>
-      <p><b>Cláusula 2 | Doente, Representante e Capacidade</b><br>O doente é a pessoa singular cujo nome e data de nascimento são apresentados. O representante deve verificar a sua identidade e confirmar a autorização válida.</p>
-      <p><b>Cláusula 3 | Entidade Transmitente e Operador da Plataforma</b><br>A entidade transmitente é a instituição médica apresentada. Se o operador da plataforma participar, os seus dados legais e de contacto também serão apresentados.</p>
-      <p><b>Cláusula 4 | Instituição Destinatária</b><br>O destinatário limita-se à instituição identificada nesta página. Sem nova autorização, os dados não serão comunicados a outras instituições.</p>
-      <p><b>Cláusula 5 | Finalidade do Tratamento e Usos Proibidos</b><br>A instituição destinatária apenas poderá tratar os dados para verificar a identidade, realizar marcações, apoiar o diagnóstico, etc. Sem autorização separada, os dados não poderão ser utilizados para publicidade ou marketing.</p>
-      <p><b>Cláusula 6 | Identificação, Marcação e Cuidados</b><br>Os dados podem incluir nome, documento, processo, serviço, contacto de emergência, etc. Os elementos não selecionados não serão transferidos.</p>
-      <p><b>Cláusula 7 | Dados de Saúde Sensíveis</b><br>Incluem queixas, antecedentes, medicação, relatórios, etc. O sistema não deve selecionar o processo completo por defeito.</p>
-      <p><b>Cláusula 8 | Transmissão e Acesso</b><br>Os dados serão transmitidos por interface encriptada. O acesso fica limitado aos profissionais envolvidos. Todos os acessos serão registados.</p>
-      <p><b>Cláusula 9 | Acesso, Conservação e Eliminação</b><br>O acesso começa 7 dias antes da consulta e termina 30 dias após. Os ficheiros temporários serão apagados no prazo de 30 dias.</p>
-      <p><b>Cláusula 10 | Segurança, Subcontratantes e Transferência Posterior</b><br>As partes devem aplicar encriptação e controlos de acesso. Não é permitida transferência posterior sem novo fundamento legal.</p>
-      <p><b>Cláusula 11 | Direitos do Doente, Retirada e Reclamações</b><br>O doente pode consultar a lista de dados e o histórico de acessos, e impedir futuras transferências. A retirada não afeta o tratamento anterior.</p>
-      <p><b>Cláusula 12 | Incidentes de Segurança</b><br>Em caso de violação, as instituições devem adotar medidas corretivas e notificar o doente e as autoridades.</p>
-      
-      <h3>Parte 4 | Cláusulas Específicas da Rota</h3>
-      <p><b>Rota 1 | China Continental → HK</b><br>
-      Cláusula 13 | Regimes Aplicáveis e Mecanismo Transfronteiriço: A entidade transmitente deve cumprir a PIPL. Quando aplicável, pode ser utilizado o Contrato-Padrão da Grande Baía.<br>
-      Cláusula 14 | Acesso em HK: O destinatário em HK apenas permitirá o acesso a profissionais verificados, notificando o doente após cada acesso.<br>
-      Cláusula 15 | Diferenças Legais: Existem diferenças nos reguladores e sistemas de registos.<br>
-      Cláusula 16 | Consentimento Final: Confirmo que li e consinto separadamente a transferência para a instituição em HK.</p>
-      <p>(As rotas 2 a 6 seguem uma estrutura semelhante, com requisitos específicos.)</p>
-      
-      <h3>Parte 5 | Página Final de Assinatura</h3>
-      <p>Resumo Final: Nome do doente, representante, transmitente, destinatário, serviço, lista de dados, finalidade, período de acesso, etc.<br>
-      Três caixas de seleção:<br>
-      1. Li e compreendi este acordo.<br>
-      2. Consinto separadamente a transferência transfronteiriça.<br>
-      3. Consinto separadamente a transferência de dados de saúde sensíveis.<br>
-      4. Sou o doente ou tenho autorização válida.</p>
-    `,
-    yue: `
-      <h3>第一部分 | 協議生成規則</h3>
-      <p>系統根據用戶選擇，確定以下六條路徑之一：001 中國內地→香港；002 中國內地→澳門；003 香港→澳門；004 澳門→香港；005 香港→中國內地；006 澳門→中國內地。協議由通用條款（1-12條）及對應路徑特別條款（13-16條）共同組成。</p>
-      
-      <h3>第二部分 | 協議首頁固定內容</h3>
-      <p>《跨境就醫個人信息及健康醫療資料傳輸協議》<br>
-      版本號：系統顯示當前版本號<br>
-      生效日期：系統顯示當前生效日期<br>
-      本次授權編號：系統自動生成唯一編號<br>
-      跨境路徑：系統直接顯示「始發地 → 接收地」<br>
-      授權有效期：系統直接顯示起止日期和時間</p>
-      
-      <h3>第三部分 | 十二條通用條款</h3>
-      <p><b>第1條 | 本次跨境醫療服務</b><br>您正在申請跨境預約掛號、轉診、遠程會診等服務。為使接收醫療機構了解您的身體狀況並提供連續、安全的醫療服務，系統需要將列明的身份資料和健康醫療資料傳輸至接收醫療機構。本次授權僅適用於當前顯示的就診申請。</p>
-      <p><b>第2條 | 患者、代理者及代理資格</b><br>本次資料所涉及的患者，是頁面顯示姓名、出生日期、證件類型的自然人。由他人代辦操作的，代辦人應完成身份核驗，並確認已經取得患者明確授權。</p>
-      <p><b>第3條 | 資料提供方及平台運營方</b><br>本次資料提供方為頁面顯示法定全稱的醫療機構。平台運營方如參與資料檢索等，系統會顯示其法定全稱及聯繫方式。</p>
-      <p><b>第4條 | 接收醫療機構</b><br>本次接收方僅限為本頁面顯示法定全稱的醫療機構。未經重新授權，資料不得提供給未列明的其他機構。</p>
-      <p><b>第5條 | 處理目的及禁止用途</b><br>接收醫療機構僅可為核實患者身份、完成預約、了解病史、輔助診斷等本次診療相關目的處理資料。未經另行合法授權，不得用於廣告、營銷、保險推介、信用評估等不相容目的。</p>
-      <p><b>第6條 | 身份、預約及照護資料</b><br>可能傳輸的資料包括姓名、證件號、病歷號、預約科室、緊急聯繫人等。系統必須逐項顯示本次實際傳輸的項目，未被勾選的項目不得傳輸。</p>
-      <p><b>第7條 | 敏感健康醫療資料</b><br>敏感健康資料包括主訴、病史、用藥、檢驗報告等。系統不得默認選擇全部病歷，只能選擇本次診療確有必要項目。</p>
-      <p><b>第8條 | 傳輸方式及訪問人員</b><br>資料應通過加密接口傳輸，不得通過普通郵件等發送。僅限直接參與診療的人員訪問。每次訪問均應記錄人員、時間和資料範圍。</p>
-      <p><b>第9條 | 訪問期限、保存期限及刪除</b><br>在線查閱權限原則上從預約前7日開始，就診結束後30日自動關閉。臨時文件應在用途完成後30日內刪除。</p>
-      <p><b>第10條 | 安全措施、受託處理及再提供</b><br>三方應採取加密、訪問控制等安全措施。未經新的合法依據，不得將資料繼續提供給其他機構。</p>
-      <p><b>第11條 | 患者權利、撤回及投訴</b><br>患者可查看資料清單和訪問記錄，並可停止尚未發生的後續傳輸。撤回同意不影響撤回前已完成的合法處理。</p>
-      <p><b>第12條 | 資料安全事件</b><br>發生洩露等事件時，相關機構應立即採取補救措施，並依法通知患者和監管機關。</p>
-      
-      <h3>第四部分 | 六條路徑特別條款</h3>
-      <p><b>協議一 | 中國內地 → 香港</b><br>
-      第13條 | 適用制度與跨境機制：資料提供方應依照《個人信息保護法》履行出境告知等義務。雙方符合條件時，可採用大灣區標準合同。<br>
-      第14條 | 接收後的訪問安排：香港接收醫院只能讓參與診療的醫護人員訪問，每次訪問後通知患者。<br>
-      第15條 | 法律差異提示：兩地法律和醫療記錄制度存在差異。<br>
-      第16條 | 最終單獨同意：本人確認閱讀並單獨同意將資料傳輸至香港醫療機構。</p>
-      <p>（其他路徑協議二至協議六的條款結構與協議一相似，具體文本依據系統實際路徑呈現。）</p>
-      
-      <h3>第五部分 | 最終簽署頁面</h3>
-      <p>最終授權匯總：包括患者姓名、代辦人信息、資料提供方、接收醫療機構、接收科室、傳輸清單、診療目的、訪問起止時間、撤回授權入口等。<br>
-      三個獨立勾選框：<br>
-      1. 我已逐條閱讀並理解本協議。<br>
-      2. 我單獨同意本次個人信息跨境傳輸。<br>
-      3. 我另行同意傳輸本頁面逐項列明的健康醫療敏感個人信息。<br>
-      4. 我是患者本人，或已取得患者明確授權／依法具有代為決定資格。</p>
-    `
-  };
-
   /* ============================================================
    * PWA 安装逻辑
    * ============================================================ */
@@ -886,29 +702,6 @@
     refreshLoginState();
   }
 
-  /* ============================================================
-   * 查看协议弹窗
-   * ============================================================ */
-  function openAgreement(type) {
-    let content = '';
-    if (type === 'user') {
-      content = PROTOCOLS[state.language] || PROTOCOLS['zh'];
-      el('agreementTitle').textContent = state.language === 'en' ? 'User Agreement' : (state.language === 'pt' ? 'Termos e Condições' : '用户协议');
-    } else {
-      // 隐私政策可以展示相同的协议，或者单独说明。这里我们复用协议内容并加上提示。
-      content = PROTOCOLS[state.language] || PROTOCOLS['zh'];
-      el('agreementTitle').textContent = state.language === 'en' ? 'Privacy Policy' : (state.language === 'pt' ? 'Política de Privacidade' : '隐私政策');
-    }
-    el('agreementContent').innerHTML = content;
-    el('modalAgreementMask').classList.add('show');
-    el('modalAgreement').classList.add('show');
-  }
-
-  function closeAgreement() {
-    el('modalAgreementMask').classList.remove('show');
-    el('modalAgreement').classList.remove('show');
-  }
-
   function sendCode() {
     if (state.countdown > 0 || !validPhone(state.phone)) return;
     state.countdown = 60;
@@ -937,7 +730,7 @@
   }
 
   /* ============================================================
-   * 底部导航构建
+   * 底部导航构建（各端新增三地医院）
    * ============================================================ */
   function buildTabbar() {
     let items = [];
@@ -1022,6 +815,9 @@
     return '';
   }
 
+  /* ============================================================
+   * 我的页面
+   * ============================================================ */
   function renderProfile() {
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
     const names = { elder: '李建国', guardian: '张先生', hospital: '广东省人民医院' };
@@ -1090,7 +886,7 @@
           <span class="list-icon">ℹ️</span>
           <div class="list-content">
             <div class="list-title">关于 Carelink</div>
-            <div class="list-sub">版本 v1.7.0</div>
+            <div class="list-sub">版本 v1.6.0</div>
           </div>
           <span class="list-action">›</span>
         </div>
@@ -1102,6 +898,9 @@
     `;
   }
 
+  /* ============================================================
+   * 切换身份（带验证码）
+   * ============================================================ */
   let switchTargetRole = null;
   let switchCountdown = 0;
   let switchTimer = null;
@@ -1189,6 +988,9 @@
     showToast('已退出登录');
   }
 
+  /* ============================================================
+   * 各端内容页面
+   * ============================================================ */
   function renderElderScan() {
     return `
       <div style="text-align: center; padding: 30px 0;">
@@ -1458,6 +1260,9 @@
     `;
   }
 
+  /* ============================================================
+   * 三地医院列表（三个端共用）
+   * ============================================================ */
   function renderHospitalList() {
     return `
       <div class="card">
@@ -1491,6 +1296,9 @@
     `;
   }
 
+  /* ============================================================
+   * 扫码 & SOS
+   * ============================================================ */
   function openScanModal() {
     el('modalScanMask').classList.add('show');
     el('modalScan').classList.add('show');
@@ -1537,6 +1345,9 @@
     el('sosOverlay').classList.remove('show');
   }
 
+  /* ============================================================
+   * Toast 与初始化
+   * ============================================================ */
   let toastTimer = null;
   function showToast(msg) {
     const toast = el('toast');
@@ -1560,8 +1371,6 @@
   window.selectLanguage = selectLanguage;
   window.selectRole = selectRole;
   window.toggleAgree = toggleAgree;
-  window.openAgreement = openAgreement;
-  window.closeAgreement = closeAgreement;
   window.sendCode = sendCode;
   window.doLogin = doLogin;
   window.switchTab = switchTab;
