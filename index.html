@@ -529,6 +529,19 @@
   <button class="btn btn-outline btn-block" style="margin-top: 10px;" onclick="closeModal('modalScan')">取消</button>
 </div>
 
+<!-- 弹窗：切换身份验证 -->
+<div class="modal-mask" id="modalSwitchMask" onclick="closeSwitchModal()"></div>
+<div class="modal-box" id="modalSwitch">
+  <div class="modal-title">切换身份验证</div>
+  <div class="modal-desc" id="switchModalDesc">为保障安全，切换至【监护人端】需要重新验证</div>
+  <div class="input-group" style="text-align:left; margin-bottom: 14px;">
+    <input type="tel" id="switchCodeInput" placeholder="请输入验证码" maxlength="6" inputmode="numeric">
+    <button class="code-btn" id="switchCodeBtn" onclick="sendSwitchCode()">获取验证码</button>
+  </div>
+  <button class="btn btn-primary btn-block" id="switchConfirmBtn" onclick="confirmSwitchRole()" disabled>确认切换</button>
+  <button class="btn btn-outline btn-block" style="margin-top: 10px;" onclick="closeSwitchModal()">取消</button>
+</div>
+
 <!-- 弹窗：紧急求助（全屏动画） -->
 <div class="sos-overlay" id="sosOverlay">
   <div class="sos-pulse">🚨</div>
@@ -803,7 +816,7 @@
     ];
 
     const roleCards = roles.map(r => `
-      <div class="option-card ${state.role === r.id ? 'selected' : ''}" onclick="switchRole('${r.id}')" style="margin-bottom: 10px; padding: 16px;">
+      <div class="option-card ${state.role === r.id ? 'selected' : ''}" onclick="requestSwitchRole('${r.id}')" style="margin-bottom: 10px; padding: 16px;">
         <span class="option-icon">${r.icon}</span>
         <div style="flex: 1;">
           <div class="option-name" style="font-size: 15px;">${r.name}</div>
@@ -824,7 +837,7 @@
 
       <div class="card">
         <div class="card-title">🔄 切换身份</div>
-        <div class="card-desc" style="margin-bottom: 16px;">演示环境：可随时在三个端之间切换，体验不同功能</div>
+        <div class="card-desc" style="margin-bottom: 16px;">演示环境：切换身份需重新验证手机号</div>
         ${roleCards}
       </div>
 
@@ -857,7 +870,7 @@
           <span class="list-icon">ℹ️</span>
           <div class="list-content">
             <div class="list-title">关于粤港澳医疗通</div>
-            <div class="list-sub">版本 v1.2.0</div>
+            <div class="list-sub">版本 v1.3.0</div>
           </div>
           <span class="list-action">›</span>
         </div>
@@ -869,8 +882,73 @@
     `;
   }
 
-  function switchRole(role) {
+  /* ============================================================
+   * 切换身份（带验证码验证）
+   * ============================================================ */
+  let switchTargetRole = null;
+  let switchCountdown = 0;
+  let switchTimer = null;
+
+  function requestSwitchRole(role) {
     if (state.role === role) return;
+    switchTargetRole = role;
+    const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
+    el('switchModalDesc').textContent = `为保障安全，切换至【${roleNames[role]}】需要重新验证手机号`;
+
+    // 重置弹窗状态
+    const input = el('switchCodeInput');
+    input.value = '';
+    el('switchConfirmBtn').disabled = true;
+    el('switchCodeBtn').disabled = false;
+    el('switchCodeBtn').textContent = '获取验证码';
+    switchCountdown = 0;
+    if (switchTimer) { clearInterval(switchTimer); switchTimer = null; }
+
+    // 输入监听
+    input.oninput = (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+      el('switchConfirmBtn').disabled = e.target.value.length < 4;
+    };
+
+    el('modalSwitchMask').classList.add('show');
+    el('modalSwitch').classList.add('show');
+  }
+
+  function closeSwitchModal() {
+    el('modalSwitchMask').classList.remove('show');
+    el('modalSwitch').classList.remove('show');
+    switchTargetRole = null;
+    if (switchTimer) { clearInterval(switchTimer); switchTimer = null; }
+  }
+
+  function sendSwitchCode() {
+    if (switchCountdown > 0) return;
+    switchCountdown = 60;
+    el('switchCodeBtn').disabled = true;
+    el('switchCodeBtn').textContent = switchCountdown + 's';
+    showToast('验证码已发送至 ' + (state.phone || '当前手机号') + '（演示：任意4位数字）');
+
+    if (switchTimer) clearInterval(switchTimer);
+    switchTimer = setInterval(() => {
+      switchCountdown--;
+      el('switchCodeBtn').textContent = switchCountdown + 's';
+      if (switchCountdown <= 0) {
+        clearInterval(switchTimer);
+        switchTimer = null;
+        el('switchCodeBtn').disabled = false;
+        el('switchCodeBtn').textContent = '获取验证码';
+      }
+    }, 1000);
+  }
+
+  function confirmSwitchRole() {
+    const code = el('switchCodeInput').value.trim();
+    if (code.length < 4) { showToast('请输入4位以上验证码'); return; }
+
+    const role = switchTargetRole;
+    closeSwitchModal();
+
+    // 执行切换
     state.role = role;
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
     el('appHeaderRole').textContent = roleNames[role];
@@ -1316,7 +1394,10 @@
   window.sendCode = sendCode;
   window.doLogin = doLogin;
   window.switchTab = switchTab;
-  window.switchRole = switchRole;
+  window.requestSwitchRole = requestSwitchRole;
+  window.closeSwitchModal = closeSwitchModal;
+  window.sendSwitchCode = sendSwitchCode;
+  window.confirmSwitchRole = confirmSwitchRole;
   window.openScanModal = openScanModal;
   window.closeModal = closeModal;
   window.simulateScanSuccess = simulateScanSuccess;
