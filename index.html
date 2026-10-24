@@ -213,10 +213,37 @@
       z-index: 5;
     }
     .header-title { font-size: 20px; font-weight: 700; color: var(--text); }
+    .header-right {
+      display: flex; align-items: center; gap: 12px;
+    }
     .header-role {
       font-size: 12px; background: #eef4ff; color: var(--primary);
       padding: 4px 10px; border-radius: 12px; font-weight: 600;
     }
+    /* 顶部悬浮 SOS 按钮 */
+    .sos-fab-header {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px; font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(220,38,38,0.5);
+      animation: pulseSOS 2s infinite;
+      flex-shrink: 0;
+      border: none;
+      font-family: inherit;
+    }
+    .sos-fab-header.show { display: flex; }
+    .sos-fab-header:active { transform: scale(0.92); }
+    @keyframes pulseSOS {
+      0% { box-shadow: 0 0 0 0 rgba(220,38,38,0.6); }
+      70% { box-shadow: 0 0 0 14px rgba(220,38,38,0); }
+      100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+    }
+
     .app-content {
       flex: 1;
       overflow-y: auto;
@@ -507,7 +534,10 @@
   <div class="screen" id="screenApp">
     <header class="app-header">
       <div class="header-title" id="appHeaderTitle">扫码授权</div>
-      <div class="header-role" id="appHeaderRole">老人端</div>
+      <div class="header-right">
+        <button class="sos-fab-header" id="headerSOSBtn" onclick="openSOS()">SOS</button>
+        <div class="header-role" id="appHeaderRole">老人端</div>
+      </div>
     </header>
     <main class="app-content" id="appContent"></main>
     <nav class="app-tabbar" id="appTabbar"></nav>
@@ -582,6 +612,7 @@
   const appTabbar = el('appTabbar');
   const appHeaderTitle = el('appHeaderTitle');
   const appHeaderRole = el('appHeaderRole');
+  const headerSOSBtn = el('headerSOSBtn');
 
   /* ============================================================
    * 多语言基础字典
@@ -761,6 +792,13 @@
         <span>${item.label}</span>
       </div>
     `).join('');
+
+    // 控制顶部 SOS 按钮显示
+    if (state.role === 'elder') {
+      headerSOSBtn.classList.add('show');
+    } else {
+      headerSOSBtn.classList.remove('show');
+    }
   }
 
   function switchTab(idx) {
@@ -870,7 +908,7 @@
           <span class="list-icon">ℹ️</span>
           <div class="list-content">
             <div class="list-title">关于粤港澳医疗通</div>
-            <div class="list-sub">版本 v1.3.0</div>
+            <div class="list-sub">版本 v1.4.0</div>
           </div>
           <span class="list-action">›</span>
         </div>
@@ -968,6 +1006,7 @@
     codeInput.value = '';
     agreeBox.classList.remove('checked');
     loginBtn.disabled = true;
+    headerSOSBtn.classList.remove('show');
     refreshLoginState();
 
     showScreen('screenLogin');
@@ -1082,7 +1121,7 @@
       </div>
       <div class="card" style="background: #fef2f2;">
         <div class="card-title" style="color: #991b1b;">⚠️ 紧急情况下</div>
-        <div class="card-desc" style="margin-bottom: 14px;">点击下方按钮，将自动向所有紧急联系人发送求助短信和位置信息。</div>
+        <div class="card-desc" style="margin-bottom: 14px;">点击下方按钮，或点击右上角红色 SOS 悬浮图标，将自动向所有紧急联系人发送求助短信和位置信息。</div>
         <button class="btn btn-danger btn-block" onclick="openSOS()">立即求助</button>
       </div>
     `;
