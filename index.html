@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Carelink · 角色版</title>
+  <title>Carelink</title>
   
-  <!-- ===== PWA 相关 Meta ===== -->
   <meta name="theme-color" content="#2563eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -45,7 +44,6 @@
       flex-direction: column;
       overflow: hidden;
     }
-    /* 屏幕切换 */
     .screen {
       position: absolute;
       inset: 0;
@@ -63,7 +61,6 @@
       pointer-events: auto;
       z-index: 2;
     }
-    /* 通用按钮 */
     .btn {
       border: none;
       border-radius: 14px;
@@ -77,6 +74,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      width: 100%;
     }
     .btn:active { transform: scale(0.96); }
     .btn-primary {
@@ -100,14 +98,12 @@
       color: #fff;
       box-shadow: 0 8px 20px rgba(220, 38, 38, 0.35);
     }
-    .btn-block { width: 100%; }
 
-    /* 语言/角色选择页 */
     .lang-page, .role-page, .login-page {
       padding: 40px 24px;
       justify-content: center;
     }
-    .logo-area { text-align: center; margin-bottom: 40px; }
+    .logo-area { text-align: center; margin-bottom: 36px; }
     .logo-icon {
       width: 80px; height: 80px; border-radius: 20px;
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -139,7 +135,6 @@
     .option-desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
     .check-icon { color: var(--primary); font-weight: 700; font-size: 18px; }
 
-    /* 登录页 */
     .login-page { padding-top: 60px; justify-content: flex-start; }
     .login-header { margin-bottom: 32px; }
     .input-group {
@@ -164,17 +159,18 @@
       font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer;
     }
     .divider-v { width: 1px; height: 24px; background: #e5e7eb; margin: 0 12px; }
+    
+    /* 协议点击区域优化 */
     .agree-row {
       display: flex; align-items: flex-start; gap: 10px;
       margin: 20px 0 28px; font-size: 13px; color: var(--text-secondary);
-      cursor: pointer; line-height: 1.6;
+      line-height: 1.6;
     }
-    .agree-row b { color: var(--primary); font-weight: 500; }
     .checkbox {
       width: 20px; height: 20px; border-radius: 50%;
       border: 2px solid #cbd5e1; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.2s; cursor: pointer; margin-top: 1px;
     }
     .checkbox.checked { background: var(--primary); border-color: var(--primary); }
     .checkbox.checked::after {
@@ -182,6 +178,17 @@
       border: solid #fff; border-width: 0 2px 2px 0;
       transform: rotate(45deg) translate(-1px, -1px);
     }
+    .protocol-link {
+      color: var(--primary);
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-block;
+      padding: 2px 4px;
+      margin: -2px -4px;
+      border-radius: 4px;
+    }
+    .protocol-link:active { background: #eef4ff; }
+
     .code-btn {
       border: none; background: transparent; color: var(--primary);
       font-size: 14px; font-weight: 600; cursor: pointer;
@@ -189,7 +196,6 @@
     }
     .code-btn:disabled { color: #cbd5e1; }
 
-    /* App 主界面 */
     #screenApp { background: var(--bg); }
     .app-header {
       background: var(--card);
@@ -207,7 +213,6 @@
       padding: 4px 10px; border-radius: 12px; font-weight: 600;
     }
     
-    /* 🔴 全局悬浮 SOS 图标 */
     .global-sos-btn {
       position: absolute;
       top: 58px;
@@ -249,7 +254,6 @@
     }
     .app-content::-webkit-scrollbar { display: none; }
 
-    /* 底部导航 */
     .app-tabbar {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -279,7 +283,6 @@
       background: var(--primary);
     }
 
-    /* 卡片 */
     .card {
       background: var(--card);
       border-radius: 18px;
@@ -308,7 +311,6 @@
     .badge-orange { background: #ffedd5; color: #9a3412; }
     .badge-red { background: #fee2e2; color: #991b1b; }
 
-    /* 弹窗 */
     .modal-mask {
       position: fixed; inset: 0; background: rgba(15,23,42,0.6);
       opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 100;
@@ -327,7 +329,26 @@
     .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
     .modal-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
     
-    /* SOS 全屏动画 */
+    .agreement-box {
+      text-align: left;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .agreement-content {
+      flex: 1;
+      overflow-y: auto;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      padding-right: 8px;
+    }
+    .agreement-content h3 { font-size: 15px; color: var(--text); margin: 16px 0 8px; }
+    .agreement-content p { margin-bottom: 10px; }
+    .agreement-content b { color: var(--text); }
+
     .sos-overlay {
       position: fixed; inset: 0; z-index: 200;
       background: linear-gradient(180deg, #991b1b 0%, #450a0a 100%);
@@ -357,7 +378,6 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.2);
     }
 
-    /* 医院列表 */
     .hospital-item {
       display: flex; align-items: center; gap: 14px;
       padding: 14px 0; border-bottom: 1px solid var(--border);
@@ -376,7 +396,6 @@
       text-decoration: none; padding: 6px 12px; background: #eef4ff; border-radius: 8px;
     }
 
-    /* 提示 */
     .toast {
       position: fixed; bottom: 120px; left: 50%;
       transform: translateX(-50%) translateY(16px);
@@ -388,7 +407,6 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* 桌面适配 */
     @media (min-width: 480px) {
       body { align-items: center; background: #cbd5e1; padding: 20px; }
       .app-container {
@@ -403,7 +421,6 @@
 <body>
 <div class="app-container" id="appContainer">
 
-  <!-- ========== 1. 语言选择页 ========== -->
   <div class="screen active" id="screenLanguage">
     <div class="lang-page">
       <div class="logo-area">
@@ -438,7 +455,6 @@
     </div>
   </div>
 
-  <!-- ========== 2. 角色选择页 ========== -->
   <div class="screen" id="screenRole">
     <div class="role-page">
       <div class="logo-area" style="margin-bottom: 30px;">
@@ -465,7 +481,6 @@
     </div>
   </div>
 
-  <!-- ========== 3. 登录页 ========== -->
   <div class="screen" id="screenLogin">
     <div class="login-page">
       <div class="login-header">
@@ -483,18 +498,20 @@
         <input type="tel" id="codeInput" placeholder="请输入验证码" maxlength="6" inputmode="numeric">
         <button class="code-btn" id="codeBtn" disabled onclick="sendCode()">获取验证码</button>
       </div>
-      <div class="agree-row" id="agreeRow" onclick="toggleAgree()">
-        <div class="checkbox" id="agreeBox"></div>
-        <div>我已阅读并同意 <b>《用户协议》</b> 和 <b>《隐私政策》</b></div>
+      
+      <!-- 修复后的协议区域 -->
+      <div class="agree-row">
+        <div class="checkbox" id="agreeBox" onclick="toggleAgree()"></div>
+        <div>我已阅读并同意 <span class="protocol-link" onclick="openAgreement('user')">《用户协议》</span> 和 <span class="protocol-link" onclick="openAgreement('privacy')">《隐私政策》</span></div>
       </div>
-      <button class="btn btn-primary btn-block" id="loginBtn" disabled onclick="doLogin()">登 录</button>
+      
+      <button class="btn btn-primary" id="loginBtn" disabled onclick="doLogin()">登 录</button>
       <div style="text-align:center; margin-top: 40px; font-size: 12px; color: #9ca3af;">
         演示环境：任意手机号 + 任意4位验证码即可登录
       </div>
     </div>
   </div>
 
-  <!-- ========== 4. App 主界面 ========== -->
   <div class="screen" id="screenApp">
     <header class="app-header">
       <div class="header-title" id="appHeaderTitle">扫码授权</div>
@@ -503,7 +520,6 @@
       </div>
     </header>
 
-    <!-- 全局悬浮 SOS 按钮 (仅老人端显示) -->
     <button class="global-sos-btn" id="headerSOSBtn" onclick="openSOS()">
       SOS
       <span>一键求助</span>
@@ -515,21 +531,28 @@
 
 </div>
 
-<!-- 弹窗：扫码 -->
+<!-- 扫码弹窗 -->
 <div class="modal-mask" id="modalScanMask" onclick="closeModal('modalScan')"></div>
 <div class="modal-box" id="modalScan">
   <div class="modal-title">扫码授权</div>
   <div style="width: 200px; height: 200px; margin: 0 auto 20px; border: 3px dashed var(--primary); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--primary); position: relative; overflow: hidden;">
-    <div style="position: absolute; left: 0; right: 0; height: 3px; background: var(--primary); box-shadow: 0 0 10px var(--primary); animation: scanMove 2s infinite linear;"></div>
     <div style="font-size: 48px; margin-bottom: 10px;">📷</div>
-    <div style="font-size: 13px;">请对准医院/监护人二维码</div>
+    <div style="font-size: 13px;">请对准二维码</div>
   </div>
   <div class="modal-desc">扫描成功后将授权对方查看您的近期就诊记录</div>
-  <button class="btn btn-primary btn-block" onclick="simulateScanSuccess()">模拟扫描成功</button>
-  <button class="btn btn-outline btn-block" style="margin-top: 10px;" onclick="closeModal('modalScan')">取消</button>
+  <button class="btn btn-primary" onclick="simulateScanSuccess()">模拟扫描成功</button>
+  <button class="btn btn-outline" style="margin-top: 10px;" onclick="closeModal('modalScan')">取消</button>
 </div>
 
-<!-- 弹窗：切换身份验证 -->
+<!-- 协议弹窗 -->
+<div class="modal-mask" id="modalAgreementMask" onclick="closeAgreement()"></div>
+<div class="modal-box agreement-box" id="modalAgreement">
+  <div class="modal-title" id="agreementTitle">用户协议</div>
+  <div class="agreement-content" id="agreementContent"></div>
+  <button class="btn btn-primary" onclick="closeAgreement()">我已阅读</button>
+</div>
+
+<!-- 切换身份弹窗 -->
 <div class="modal-mask" id="modalSwitchMask" onclick="closeSwitchModal()"></div>
 <div class="modal-box" id="modalSwitch">
   <div class="modal-title">切换身份验证</div>
@@ -538,11 +561,11 @@
     <input type="tel" id="switchCodeInput" placeholder="请输入验证码" maxlength="6" inputmode="numeric">
     <button class="code-btn" id="switchCodeBtn" onclick="sendSwitchCode()">获取验证码</button>
   </div>
-  <button class="btn btn-primary btn-block" id="switchConfirmBtn" onclick="confirmSwitchRole()" disabled>确认切换</button>
-  <button class="btn btn-outline btn-block" style="margin-top: 10px;" onclick="closeSwitchModal()">取消</button>
+  <button class="btn btn-primary" id="switchConfirmBtn" onclick="confirmSwitchRole()" disabled>确认切换</button>
+  <button class="btn btn-outline" style="margin-top: 10px;" onclick="closeSwitchModal()">取消</button>
 </div>
 
-<!-- 弹窗：紧急求助（全屏动画） -->
+<!-- SOS 全屏动画 -->
 <div class="sos-overlay" id="sosOverlay">
   <div class="sos-pulse">🚨</div>
   <div class="sos-title">紧急求助</div>
@@ -551,49 +574,110 @@
   <button class="sos-cancel" onclick="cancelSOS()">取消求助</button>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
   /* ============================================================
+   * 协议内容（多语言）
+   * ============================================================ */
+  const PROTOCOLS = {
+    zh: `<h3>跨境就医个人信息及健康医疗资料传输协议</h3>
+<p>本次授权编号：系统自动生成唯一编号。跨境路径：系统显示「始发地 → 接收地」。授权有效期：系统显示起止时间。</p>
+<h3>通用条款（第1-12条）摘要</h3>
+<p><b>1. 本次跨境医疗服务：</b>您申请跨境预约、转诊、远程会诊等服务，系统需将身份及健康资料传输至接收医疗机构。本次授权仅适用于当前就诊，不构成长期授权。</p>
+<p><b>2. 患者与代理：</b>由他人代办的，代办人须完成身份核验并确认已取得患者明确授权或具有法定代理资格。</p>
+<p><b>3. 资料提供方与平台：</b>资料提供方为页面显示的医疗机构；平台如参与处理，将同时显示其法定名称与联系方式。</p>
+<p><b>4. 接收方限制：</b>接收方仅限本页面列明的医疗机构。未经重新授权，不得向其他机构提供。</p>
+<p><b>5. 处理目的：</b>仅用于核实身份、完成预约、了解病史、辅助诊断等本次诊疗目的。不得用于广告、营销、保险推介、信用评估等。</p>
+<p><b>6. 传输资料范围：</b>包括身份信息、预约信息、紧急联系人等，系统逐项显示实际传输项目，未勾选的不传输。</p>
+<p><b>7. 敏感健康资料：</b>包括病史、用药、检验报告等，系统不得默认全选，仅传输本次诊疗必需项目。</p>
+<p><b>8. 传输与访问：</b>通过加密接口传输，仅限参与诊疗的医护人员访问，每次访问均记录日志。</p>
+<p><b>9. 期限与删除：</b>在线查阅权限原则上前7日开始、结束后30日关闭；临时文件30日内删除。</p>
+<p><b>10. 安全与再提供：</b>三方采取加密、访问控制等措施；未经新合法依据不得再提供。</p>
+<p><b>11. 患者权利：</b>可查看资料清单与访问记录，可停止后续传输，可申请更正与投诉。</p>
+<p><b>12. 安全事件：</b>发生泄露时应立即补救，并依法通知患者与监管机关。</p>
+<h3>最终签署</h3>
+<p>本人确认已逐条阅读并理解本协议，单独同意本次个人信息跨境传输，另行同意敏感健康资料传输，并声明本人为患者本人或已取得合法授权。</p>`,
+    en: `<h3>Cross-Boundary Medical Information and Health Data Transfer Agreement</h3>
+<p>Authorization No.: generated by system. Route: origin → recipient. Validity: start and end time displayed.</p>
+<h3>General Clauses (1-12) Summary</h3>
+<p><b>1. Current Service:</b> You apply for cross-boundary appointment, referral or teleconsultation. Information is transferred to the recipient for the current episode of care only.</p>
+<p><b>2. Patient & Representative:</b> A representative must verify identity and confirm valid authorization or lawful authority.</p>
+<p><b>3. Transferor & Platform:</b> The transferor is the institution displayed. If a platform participates, its identity and contact are also shown.</p>
+<p><b>4. Recipient:</b> Limited to the institution identified. No disclosure to others without renewed authorization.</p>
+<p><b>5. Purpose:</b> Only for identity verification, appointment, diagnosis and related care. No advertising, marketing or credit assessment.</p>
+<p><b>6. Data Scope:</b> Identity, appointment and care information. Unselected items are not transferred.</p>
+<p><b>7. Sensitive Health Data:</b> Only necessary items selected, not the full record by default.</p>
+<p><b>8. Transmission & Access:</b> Encrypted interface; access limited to involved professionals; every access logged.</p>
+<p><b>9. Retention:</b> Access begins 7 days before appointment, closes 30 days after; temporary files deleted within 30 days.</p>
+<p><b>10. Security:</b> Encryption, access controls and no onward transfer without lawful basis.</p>
+<p><b>11. Patient Rights:</b> View data list and access history, stop future transfers, request correction and complain.</p>
+<p><b>12. Incidents:</b> Remedial action and notification to patient and regulators as required.</p>
+<h3>Final Signature</h3>
+<p>I have read and understood this agreement, separately consent to the cross-boundary transfer, separately consent to sensitive health data transfer, and confirm I am the patient or have lawful authority.</p>`,
+    pt: `<h3>Acordo de Transferência de Informações Pessoais e Dados de Saúde para Cuidados Transfronteiriços</h3>
+<p>N.º de Autorização: gerado pelo sistema. Rota: origem → destinatário. Validade: data/hora de início e fim.</p>
+<h3>Cláusulas Gerais (1-12) — Resumo</h3>
+<p><b>1. Serviço Atual:</b> Solicita marcação, referenciação ou teleconsulta transfronteiriça. Os dados são transferidos apenas para o episódio de cuidados atual.</p>
+<p><b>2. Doente e Representante:</b> O representante deve verificar a identidade e confirmar autorização válida.</p>
+<p><b>3. Transmitente e Plataforma:</b> O transmitente é a instituição apresentada. Se a plataforma participar, os seus dados também são apresentados.</p>
+<p><b>4. Destinatário:</b> Limitado à instituição identificada. Sem nova autorização, não há comunicação a terceiros.</p>
+<p><b>5. Finalidade:</b> Apenas para verificação de identidade, marcação, diagnóstico e cuidados relacionados. Proibido para publicidade ou marketing.</p>
+<p><b>6. Âmbito dos Dados:</b> Identificação, marcação e cuidados. Elementos não selecionados não são transferidos.</p>
+<p><b>7. Dados Sensíveis:</b> Apenas os necessários, não o processo completo por defeito.</p>
+<p><b>8. Transmissão e Acesso:</b> Interface encriptada; acesso limitado aos profissionais envolvidos; registo de acessos.</p>
+<p><b>9. Conservação:</b> Acesso inicia 7 dias antes e termina 30 dias após; ficheiros temporários eliminados em 30 dias.</p>
+<p><b>10. Segurança:</b> Encriptação, controlos de acesso e proibição de transferência posterior sem fundamento legal.</p>
+<p><b>11. Direitos do Doente:</b> Consultar dados e acessos, impedir transferências futuras, solicitar correção e reclamar.</p>
+<p><b>12. Incidentes:</b> Medidas corretivas e notificação ao doente e autoridades.</p>
+<h3>Assinatura Final</h3>
+<p>Li e compreendi o acordo, consinto separadamente a transferência transfronteiriça, consinto separadamente a transferência de dados de saúde sensíveis e confirmo que sou o doente ou tenho autoridade legal.</p>`,
+    yue: `<h3>跨境就醫個人信息及健康醫療資料傳輸協議</h3>
+<p>本次授權編號：系統自動生成。跨境路徑：系統顯示「始發地 → 接收地」。授權有效期：系統顯示起止時間。</p>
+<h3>通用條款（第1-12條）摘要</h3>
+<p><b>1. 本次跨境醫療服務：</b>您申請跨境預約、轉診、遠程會診等服務，系統需將身份及健康資料傳輸至接收醫療機構。本次授權僅適用於當前就診，不構成長期授權。</p>
+<p><b>2. 患者與代理：</b>由他人代辦的，代辦人須完成身份核驗並確認已取得患者明確授權或具有法定代理資格。</p>
+<p><b>3. 資料提供方與平台：</b>資料提供方為頁面顯示的醫療機構；平台如參與處理，將同時顯示其法定名稱與聯繫方式。</p>
+<p><b>4. 接收方限制：</b>接收方僅限本頁面列明的醫療機構。未經重新授權，不得向其他機構提供。</p>
+<p><b>5. 處理目的：</b>僅用於核實身份、完成預約、了解病史、輔助診斷等本次診療目的。不得用於廣告、營銷、保險推介、信用評估等。</p>
+<p><b>6. 傳輸資料範圍：</b>包括身份信息、預約信息、緊急聯繫人等，系統逐項顯示實際傳輸項目，未勾選的不傳輸。</p>
+<p><b>7. 敏感健康資料：</b>包括病史、用藥、檢驗報告等，系統不得默認全選，僅傳輸本次診療必需項目。</p>
+<p><b>8. 傳輸與訪問：</b>通過加密接口傳輸，僅限參與診療的醫護人員訪問，每次訪問均記錄日誌。</p>
+<p><b>9. 期限與刪除：</b>在線查閱權限原則上前7日開始、結束後30日關閉；臨時文件30日內刪除。</p>
+<p><b>10. 安全與再提供：</b>三方採取加密、訪問控制等措施；未經新合法依據不得再提供。</p>
+<p><b>11. 患者權利：</b>可查看資料清單與訪問記錄，可停止後續傳輸，可申請更正與投訴。</p>
+<p><b>12. 安全事件：</b>發生洩露時應立即補救，並依法通知患者與監管機關。</p>
+<h3>最終簽署</h3>
+<p>本人確認已逐條閱讀並理解本協議，單獨同意本次個人信息跨境傳輸，另行同意敏感健康資料傳輸，並聲明本人為患者本人或已取得合法授權。</p>`
+  };
+
+  /* ============================================================
    * PWA 安装逻辑
    * ============================================================ */
   let deferredPrompt = null;
-
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
   });
-
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(err => {
       console.log('SW 注册失败（本地测试忽略）', err);
     });
   }
-
   async function installApp() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       deferredPrompt = null;
-      if (outcome === 'accepted') {
-        showToast('已开始安装到主屏幕');
-      } else {
-        showToast('已取消安装');
-      }
+      if (outcome === 'accepted') showToast('已开始安装到主屏幕');
+      else showToast('已取消安装');
       return;
     }
-    
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    
-    if (isStandalone) {
-      showToast('您已经在独立应用模式下运行');
-      return;
-    }
-
+    if (isStandalone) { showToast('您已经在独立应用模式下运行'); return; }
     if (isIOS) {
-      alert('请按以下步骤添加到主屏幕：\n\n1. 点击 Safari 底部的「分享」按钮（方框+向上箭头）\n2. 向下滑动找到「添加到主屏幕」\n3. 点击右上角的「添加」\n\n完成后即可从桌面全屏打开本应用。');
+      alert('请按以下步骤添加到主屏幕：\n\n1. 点击 Safari 底部的「分享」按钮\n2. 向下滑动找到「添加到主屏幕」\n3. 点击右上角的「添加」\n\n完成后即可从桌面全屏打开本应用。');
     } else {
       alert('请按以下步骤添加到主屏幕：\n\n1. 点击浏览器右上角菜单（通常是三个点）\n2. 选择「安装应用」或「添加到主屏幕」\n3. 确认安装\n\n如果找不到该选项，请确保页面是通过 HTTPS 访问的。');
     }
@@ -629,26 +713,10 @@
   const headerSOSBtn = el('headerSOSBtn');
 
   const i18n = {
-    zh: {
-      tabScan: '扫码授权', tabRecord: '我的记录', tabContact: '紧急联系人',
-      tabAuth: '授权状态', tabTrace: '就医轨迹', tabAlert: '异常提醒',
-      tabPatients: '患者查询', tabUpload: '上传记录', tabHospital: '三地医院', tabProfile: '我的',
-    },
-    en: {
-      tabScan: 'Scan Auth', tabRecord: 'My Records', tabContact: 'Emergency',
-      tabAuth: 'Auth Status', tabTrace: 'Care Trace', tabAlert: 'Alerts',
-      tabPatients: 'Patient Query', tabUpload: 'Upload Record', tabHospital: 'Hospitals', tabProfile: 'Me',
-    },
-    pt: {
-      tabScan: 'Digitalizar', tabRecord: 'Meus Registos', tabContact: 'Emergência',
-      tabAuth: 'Estado da Autorização', tabTrace: 'Rastreio Clínico', tabAlert: 'Alertas',
-      tabPatients: 'Consultar Doente', tabUpload: 'Carregar Registo', tabHospital: 'Hospitais', tabProfile: 'Eu',
-    },
-    yue: {
-      tabScan: '掃碼授權', tabRecord: '我的記錄', tabContact: '緊急聯絡人',
-      tabAuth: '授權狀態', tabTrace: '就醫軌跡', tabAlert: '異常提醒',
-      tabPatients: '患者查詢', tabUpload: '上傳記錄', tabHospital: '三地醫院', tabProfile: '我的',
-    }
+    zh: { tabScan: '扫码授权', tabRecord: '我的记录', tabContact: '紧急联系人', tabAuth: '授权状态', tabTrace: '就医轨迹', tabAlert: '异常提醒', tabPatients: '患者查询', tabUpload: '上传记录', tabHospital: '三地医院', tabProfile: '我的' },
+    en: { tabScan: 'Scan Auth', tabRecord: 'My Records', tabContact: 'Emergency', tabAuth: 'Auth Status', tabTrace: 'Care Trace', tabAlert: 'Alerts', tabPatients: 'Patient Query', tabUpload: 'Upload Record', tabHospital: 'Hospitals', tabProfile: 'Me' },
+    pt: { tabScan: 'Digitalizar', tabRecord: 'Meus Registos', tabContact: 'Emergência', tabAuth: 'Estado da Autorização', tabTrace: 'Rastreio Clínico', tabAlert: 'Alertas', tabPatients: 'Consultar Doente', tabUpload: 'Carregar Registo', tabHospital: 'Hospitais', tabProfile: 'Eu' },
+    yue: { tabScan: '掃碼授權', tabRecord: '我的記錄', tabContact: '緊急聯絡人', tabAuth: '授權狀態', tabTrace: '就醫軌跡', tabAlert: '異常提醒', tabPatients: '患者查詢', tabUpload: '上傳記錄', tabHospital: '三地醫院', tabProfile: '我的' }
   };
   const t = key => (i18n[state.language] && i18n[state.language][key]) || key;
 
@@ -702,6 +770,18 @@
     refreshLoginState();
   }
 
+  function openAgreement(type) {
+    document.getElementById('agreementTitle').textContent = type === 'user' ? '用户协议' : '隐私政策';
+    document.getElementById('agreementContent').innerHTML = PROTOCOLS[state.language] || PROTOCOLS.zh;
+    el('modalAgreementMask').classList.add('show');
+    el('modalAgreement').classList.add('show');
+  }
+
+  function closeAgreement() {
+    el('modalAgreementMask').classList.remove('show');
+    el('modalAgreement').classList.remove('show');
+  }
+
   function sendCode() {
     if (state.countdown > 0 || !validPhone(state.phone)) return;
     state.countdown = 60;
@@ -729,48 +809,25 @@
     showToast('登录成功，欢迎使用 Carelink');
   }
 
-  /* ============================================================
-   * 底部导航构建（各端新增三地医院）
-   * ============================================================ */
   function buildTabbar() {
     let items = [];
     if (state.role === 'elder') {
-      items = [
-        { icon: '📷', label: t('tabScan') },
-        { icon: '📋', label: t('tabRecord') },
-        { icon: '📞', label: t('tabContact') },
-        { icon: '🏥', label: t('tabHospital') },
-        { icon: '👤', label: t('tabProfile') },
-      ];
+      items = [{ icon: '📷', label: t('tabScan') }, { icon: '📋', label: t('tabRecord') }, { icon: '📞', label: t('tabContact') }, { icon: '🏥', label: t('tabHospital') }, { icon: '👤', label: t('tabProfile') }];
     } else if (state.role === 'guardian') {
-      items = [
-        { icon: '🔐', label: t('tabAuth') },
-        { icon: '🗺️', label: t('tabTrace') },
-        { icon: '⚠️', label: t('tabAlert') },
-        { icon: '🏥', label: t('tabHospital') },
-        { icon: '👤', label: t('tabProfile') },
-      ];
+      items = [{ icon: '🔐', label: t('tabAuth') }, { icon: '🗺️', label: t('tabTrace') }, { icon: '⚠️', label: t('tabAlert') }, { icon: '🏥', label: t('tabHospital') }, { icon: '👤', label: t('tabProfile') }];
     } else {
-      items = [
-        { icon: '🔍', label: t('tabPatients') },
-        { icon: '📤', label: t('tabUpload') },
-        { icon: '🏥', label: t('tabHospital') },
-        { icon: '👤', label: t('tabProfile') },
-      ];
+      items = [{ icon: '🔍', label: t('tabPatients') }, { icon: '📤', label: t('tabUpload') }, { icon: '🏥', label: t('tabHospital') }, { icon: '👤', label: t('tabProfile') }];
     }
 
     appTabbar.innerHTML = items.map((item, idx) => `
-      <div class="nav-item ${idx === state.currentTab ? 'active' : ''}" data-index="${idx}" onclick="switchTab(${idx})">
+      <div class="nav-item ${idx === state.currentTab ? 'active' : ''}" onclick="switchTab(${idx})">
         <span style="font-size:22px;">${item.icon}</span>
         <span>${item.label}</span>
       </div>
     `).join('');
 
-    if (state.role === 'elder') {
-      headerSOSBtn.classList.add('show');
-    } else {
-      headerSOSBtn.classList.remove('show');
-    }
+    if (state.role === 'elder') headerSOSBtn.classList.add('show');
+    else headerSOSBtn.classList.remove('show');
   }
 
   function switchTab(idx) {
@@ -785,7 +842,6 @@
       hospital: [t('tabPatients'), t('tabUpload'), t('tabHospital'), t('tabProfile')]
     };
     appHeaderTitle.textContent = titles[state.role][idx] || '';
-
     appContent.innerHTML = getContent(state.role, idx);
     appContent.scrollTop = 0;
   }
@@ -815,18 +871,14 @@
     return '';
   }
 
-  /* ============================================================
-   * 我的页面
-   * ============================================================ */
   function renderProfile() {
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
     const names = { elder: '李建国', guardian: '张先生', hospital: '广东省人民医院' };
     const avatars = { elder: '👴', guardian: '👨‍👩‍👧', hospital: '🏥' };
-
     const roles = [
-      { id: 'elder', name: '老人端', desc: '大字大按钮，扫码授权、紧急联系人', icon: '👴' },
-      { id: 'guardian', name: '监护人端', desc: '授权状态、就医轨迹、异常提醒', icon: '👨‍👩‍👧' },
-      { id: 'hospital', name: '医院端', desc: '查询记录、上传就诊记录', icon: '🏥' }
+      { id: 'elder', name: '老人端', desc: '扫码授权、紧急联系人', icon: '👴' },
+      { id: 'guardian', name: '监护人端', desc: '授权状态、就医轨迹', icon: '👨‍👩‍👧' },
+      { id: 'hospital', name: '医院端', desc: '查询记录、上传记录', icon: '🏥' }
     ];
 
     const roleCards = roles.map(r => `
@@ -848,59 +900,39 @@
           当前身份：${roleNames[state.role]}
         </div>
       </div>
-
       <div class="card">
         <div class="card-title">🔄 切换身份</div>
         <div class="card-desc" style="margin-bottom: 16px;">演示环境：切换身份需重新验证手机号</div>
         ${roleCards}
       </div>
-
       <div class="card">
         <div class="list-item" onclick="showToast('打开个人资料设置')">
           <span class="list-icon">👤</span>
-          <div class="list-content">
-            <div class="list-title">个人资料</div>
-            <div class="list-sub">修改头像、姓名、联系方式</div>
-          </div>
+          <div class="list-content"><div class="list-title">个人资料</div><div class="list-sub">修改头像、姓名、联系方式</div></div>
           <span class="list-action">›</span>
         </div>
         <div class="list-item" onclick="showToast('打开账号安全设置')">
           <span class="list-icon">🔒</span>
-          <div class="list-content">
-            <div class="list-title">账号与安全</div>
-            <div class="list-sub">手机号、密码、隐私设置</div>
-          </div>
+          <div class="list-content"><div class="list-title">账号与安全</div><div class="list-sub">手机号、密码、隐私设置</div></div>
           <span class="list-action">›</span>
         </div>
-        
         <div class="list-item" onclick="installApp()">
           <span class="list-icon">📲</span>
-          <div class="list-content">
-            <div class="list-title">安装到手机</div>
-            <div class="list-sub">添加到桌面，全屏运行</div>
-          </div>
+          <div class="list-content"><div class="list-title">安装到手机</div><div class="list-sub">添加到桌面，全屏运行</div></div>
           <span class="list-action" style="color:var(--primary);">安装</span>
         </div>
-
         <div class="list-item" onclick="showToast('打开关于页面')">
           <span class="list-icon">ℹ️</span>
-          <div class="list-content">
-            <div class="list-title">关于 Carelink</div>
-            <div class="list-sub">版本 v1.6.0</div>
-          </div>
+          <div class="list-content"><div class="list-title">关于 Carelink</div><div class="list-sub">版本 v1.8.0</div></div>
           <span class="list-action">›</span>
         </div>
       </div>
-
       <div class="card" style="margin-bottom: 20px;">
-        <button class="btn btn-danger btn-block" onclick="logout()">退出登录</button>
+        <button class="btn btn-danger" onclick="logout()">退出登录</button>
       </div>
     `;
   }
 
-  /* ============================================================
-   * 切换身份（带验证码）
-   * ============================================================ */
   let switchTargetRole = null;
   let switchCountdown = 0;
   let switchTimer = null;
@@ -910,7 +942,6 @@
     switchTargetRole = role;
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
     el('switchModalDesc').textContent = `为保障安全，切换至【${roleNames[role]}】需要重新验证手机号`;
-
     const input = el('switchCodeInput');
     input.value = '';
     el('switchConfirmBtn').disabled = true;
@@ -918,12 +949,10 @@
     el('switchCodeBtn').textContent = '获取验证码';
     switchCountdown = 0;
     if (switchTimer) { clearInterval(switchTimer); switchTimer = null; }
-
     input.oninput = (e) => {
       e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
       el('switchConfirmBtn').disabled = e.target.value.length < 4;
     };
-
     el('modalSwitchMask').classList.add('show');
     el('modalSwitch').classList.add('show');
   }
@@ -941,7 +970,6 @@
     el('switchCodeBtn').disabled = true;
     el('switchCodeBtn').textContent = switchCountdown + 's';
     showToast('验证码已发送至 ' + (state.phone || '当前手机号') + '（演示：任意4位数字）');
-
     if (switchTimer) clearInterval(switchTimer);
     switchTimer = setInterval(() => {
       switchCountdown--;
@@ -958,14 +986,11 @@
   function confirmSwitchRole() {
     const code = el('switchCodeInput').value.trim();
     if (code.length < 4) { showToast('请输入4位以上验证码'); return; }
-
     const role = switchTargetRole;
     closeSwitchModal();
-
     state.role = role;
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
     el('appHeaderRole').textContent = roleNames[role];
-
     state.currentTab = 0;
     buildTabbar();
     switchTab(0);
@@ -983,38 +1008,28 @@
     loginBtn.disabled = true;
     headerSOSBtn.classList.remove('show');
     refreshLoginState();
-
     showScreen('screenLogin');
     showToast('已退出登录');
   }
 
-  /* ============================================================
-   * 各端内容页面
-   * ============================================================ */
   function renderElderScan() {
     return `
       <div style="text-align: center; padding: 30px 0;">
         <div style="font-size: 64px; margin-bottom: 20px;">📷</div>
         <div style="font-size: 20px; font-weight: 700; margin-bottom: 10px;">扫码授权</div>
         <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 30px;">请将医院或监护人提供的二维码放入框内</div>
-        <button class="btn btn-primary btn-block" style="font-size: 18px; padding: 18px;" onclick="openScanModal()">打开扫码</button>
+        <button class="btn btn-primary" style="font-size: 18px; padding: 18px;" onclick="openScanModal()">打开扫码</button>
       </div>
       <div class="card">
         <div class="card-title">最近授权记录</div>
         <div class="list-item">
           <span class="list-icon">🏥</span>
-          <div class="list-content">
-            <div class="list-title">广东省人民医院</div>
-            <div class="list-sub">2026-10-20 14:30 · 有效期 24 小时</div>
-          </div>
+          <div class="list-content"><div class="list-title">广东省人民医院</div><div class="list-sub">2026-10-20 14:30 · 有效期 24 小时</div></div>
           <span class="status-badge badge-green">生效中</span>
         </div>
         <div class="list-item">
           <span class="list-icon">👨‍👩‍👧</span>
-          <div class="list-content">
-            <div class="list-title">张先生（儿子）</div>
-            <div class="list-sub">2026-10-18 09:12 · 有效期 7 天</div>
-          </div>
+          <div class="list-content"><div class="list-title">张先生（儿子）</div><div class="list-sub">2026-10-18 09:12 · 有效期 7 天</div></div>
           <span class="status-badge badge-green">生效中</span>
         </div>
       </div>
@@ -1025,42 +1040,14 @@
     return `
       <div class="card">
         <div class="card-title">📋 我的就诊记录</div>
-        <div class="list-item">
-          <span class="list-icon">🩺</span>
-          <div class="list-content">
-            <div class="list-title">高血压复诊 · 广东省人民医院</div>
-            <div class="list-sub">2026-10-15 · 心血管内科 · 张医生</div>
-          </div>
-        </div>
-        <div class="list-item">
-          <span class="list-icon">💊</span>
-          <div class="list-content">
-            <div class="list-title">药物调整 · 澳门镜湖医院</div>
-            <div class="list-sub">2026-09-28 · 老年科 · 陈医生</div>
-          </div>
-        </div>
-        <div class="list-item">
-          <span class="list-icon">🩻</span>
-          <div class="list-content">
-            <div class="list-title">年度体检 · 香港玛丽医院</div>
-            <div class="list-sub">2026-08-12 · 体检中心</div>
-          </div>
-        </div>
+        <div class="list-item"><span class="list-icon">🩺</span><div class="list-content"><div class="list-title">高血压复诊 · 广东省人民医院</div><div class="list-sub">2026-10-15 · 心血管内科 · 张医生</div></div></div>
+        <div class="list-item"><span class="list-icon">💊</span><div class="list-content"><div class="list-title">药物调整 · 澳门镜湖医院</div><div class="list-sub">2026-09-28 · 老年科 · 陈医生</div></div></div>
+        <div class="list-item"><span class="list-icon">🩻</span><div class="list-content"><div class="list-title">年度体检 · 香港玛丽医院</div><div class="list-sub">2026-08-12 · 体检中心</div></div></div>
       </div>
       <div class="card">
         <div class="card-title">💊 当前用药</div>
-        <div class="list-item">
-          <div class="list-content">
-            <div class="list-title">氨氯地平片</div>
-            <div class="list-sub">每日一次，每次 5mg · 早餐后</div>
-          </div>
-        </div>
-        <div class="list-item">
-          <div class="list-content">
-            <div class="list-title">阿托伐他汀钙片</div>
-            <div class="list-sub">每日一次，每次 20mg · 睡前</div>
-          </div>
-        </div>
+        <div class="list-item"><div class="list-content"><div class="list-title">氨氯地平片</div><div class="list-sub">每日一次，每次 5mg · 早餐后</div></div></div>
+        <div class="list-item"><div class="list-content"><div class="list-title">阿托伐他汀钙片</div><div class="list-sub">每日一次，每次 20mg · 睡前</div></div></div>
       </div>
     `;
   }
@@ -1069,35 +1056,14 @@
     return `
       <div class="card">
         <div class="card-title">📞 紧急联系人</div>
-        <div class="list-item">
-          <span class="list-icon">👨</span>
-          <div class="list-content">
-            <div class="list-title">张先生（儿子）</div>
-            <div class="list-sub">+86 138****8888</div>
-          </div>
-          <span class="list-action" onclick="showToast('正在呼叫张先生…')">呼叫</span>
-        </div>
-        <div class="list-item">
-          <span class="list-icon">👩</span>
-          <div class="list-content">
-            <div class="list-title">李女士（女儿）</div>
-            <div class="list-sub">+852 6123****</div>
-          </div>
-          <span class="list-action" onclick="showToast('正在呼叫李女士…')">呼叫</span>
-        </div>
-        <div class="list-item">
-          <span class="list-icon">🏥</span>
-          <div class="list-content">
-            <div class="list-title">家庭医生 · 陈医生</div>
-            <div class="list-sub">+853 6612****</div>
-          </div>
-          <span class="list-action" onclick="showToast('正在呼叫陈医生…')">呼叫</span>
-        </div>
+        <div class="list-item"><span class="list-icon">👨</span><div class="list-content"><div class="list-title">张先生（儿子）</div><div class="list-sub">+86 138****8888</div></div><span class="list-action" onclick="showToast('正在呼叫张先生…')">呼叫</span></div>
+        <div class="list-item"><span class="list-icon">👩</span><div class="list-content"><div class="list-title">李女士（女儿）</div><div class="list-sub">+852 6123****</div></div><span class="list-action" onclick="showToast('正在呼叫李女士…')">呼叫</span></div>
+        <div class="list-item"><span class="list-icon">🏥</span><div class="list-content"><div class="list-title">家庭医生 · 陈医生</div><div class="list-sub">+853 6612****</div></div><span class="list-action" onclick="showToast('正在呼叫陈医生…')">呼叫</span></div>
       </div>
       <div class="card" style="background: #fef2f2;">
         <div class="card-title" style="color: #991b1b;">⚠️ 紧急情况下</div>
         <div class="card-desc" style="margin-bottom: 14px;">您也可以随时点击屏幕右上角的红色 <b>SOS</b> 悬浮图标，一键向所有紧急联系人发送求助短信和位置信息。</div>
-        <button class="btn btn-danger btn-block" onclick="openSOS()">立即求助</button>
+        <button class="btn btn-danger" onclick="openSOS()">立即求助</button>
       </div>
     `;
   }
@@ -1109,37 +1075,19 @@
         <div class="card-desc" style="margin-bottom: 16px;">授权可撤回、可查看、可追踪。以下为“谁看过什么”的清晰记录。</div>
         <div class="list-item">
           <span class="list-icon">🏥</span>
-          <div class="list-content">
-            <div class="list-title">广东省人民医院 · 心血管内科</div>
-            <div class="list-sub">授权时间：2026-10-15 09:00 · 有效期至 2026-10-22</div>
-            <div class="list-sub" style="color:#059669; margin-top:4px;">查看内容：门诊病历、用药记录、检验报告</div>
-          </div>
+          <div class="list-content"><div class="list-title">广东省人民医院 · 心血管内科</div><div class="list-sub">授权时间：2026-10-15 09:00 · 有效期至 2026-10-22</div><div class="list-sub" style="color:#059669; margin-top:4px;">查看内容：门诊病历、用药记录、检验报告</div></div>
           <span class="list-action" style="color:#dc2626;" onclick="showToast('授权已撤回')">撤回</span>
         </div>
         <div class="list-item">
           <span class="list-icon">👨‍👩‍👧</span>
-          <div class="list-content">
-            <div class="list-title">张先生（监护人）</div>
-            <div class="list-sub">授权时间：2026-10-10 14:00 · 长期有效</div>
-            <div class="list-sub" style="color:#059669; margin-top:4px;">查看内容：全部就诊记录、用药提醒</div>
-          </div>
+          <div class="list-content"><div class="list-title">张先生（监护人）</div><div class="list-sub">授权时间：2026-10-10 14:00 · 长期有效</div><div class="list-sub" style="color:#059669; margin-top:4px;">查看内容：全部就诊记录、用药提醒</div></div>
           <span class="list-action" style="color:#dc2626;" onclick="showToast('授权已撤回')">撤回</span>
         </div>
       </div>
       <div class="card">
         <div class="card-title">📋 查看记录追踪</div>
-        <div class="list-item">
-          <div class="list-content">
-            <div class="list-title">广东省人民医院 查看了用药记录</div>
-            <div class="list-sub">2026-10-18 10:32 · IP 地址已脱敏</div>
-          </div>
-        </div>
-        <div class="list-item">
-          <div class="list-content">
-            <div class="list-title">张先生 查看了检验报告</div>
-            <div class="list-sub">2026-10-17 20:15</div>
-          </div>
-        </div>
+        <div class="list-item"><div class="list-content"><div class="list-title">广东省人民医院 查看了用药记录</div><div class="list-sub">2026-10-18 10:32 · IP 地址已脱敏</div></div></div>
+        <div class="list-item"><div class="list-content"><div class="list-title">张先生 查看了检验报告</div><div class="list-sub">2026-10-17 20:15</div></div></div>
       </div>
     `;
   }
@@ -1149,27 +1097,9 @@
       <div class="card">
         <div class="card-title">🗺️ 就医轨迹</div>
         <div class="card-desc" style="margin-bottom: 16px;">按时间倒序展示被监护人的就医记录</div>
-        <div class="list-item">
-          <span class="list-icon">🏥</span>
-          <div class="list-content">
-            <div class="list-title">广东省人民医院 · 心血管内科</div>
-            <div class="list-sub">2026-10-15 09:30 · 高血压复诊</div>
-          </div>
-        </div>
-        <div class="list-item">
-          <span class="list-icon">🏥</span>
-          <div class="list-content">
-            <div class="list-title">澳门镜湖医院 · 老年科</div>
-            <div class="list-sub">2026-09-28 11:00 · 药物调整</div>
-          </div>
-        </div>
-        <div class="list-item">
-          <span class="list-icon">🏥</span>
-          <div class="list-content">
-            <div class="list-title">香港玛丽医院 · 体检中心</div>
-            <div class="list-sub">2026-08-12 08:45 · 年度体检</div>
-          </div>
-        </div>
+        <div class="list-item"><span class="list-icon">🏥</span><div class="list-content"><div class="list-title">广东省人民医院 · 心血管内科</div><div class="list-sub">2026-10-15 09:30 · 高血压复诊</div></div></div>
+        <div class="list-item"><span class="list-icon">🏥</span><div class="list-content"><div class="list-title">澳门镜湖医院 · 老年科</div><div class="list-sub">2026-09-28 11:00 · 药物调整</div></div></div>
+        <div class="list-item"><span class="list-icon">🏥</span><div class="list-content"><div class="list-title">香港玛丽医院 · 体检中心</div><div class="list-sub">2026-08-12 08:45 · 年度体检</div></div></div>
       </div>
       <div class="card">
         <div class="card-title">🌏 跨地区信息汇总</div>
@@ -1182,21 +1112,8 @@
     return `
       <div class="card" style="border-left: 4px solid #ef4444;">
         <div class="card-title" style="color: #991b1b;">⚠️ 异常提醒</div>
-        <div class="list-item">
-          <span class="list-icon">🩸</span>
-          <div class="list-content">
-            <div class="list-title">血压异常波动</div>
-            <div class="list-sub">2026-10-16 08:12 · 收缩压 158mmHg / 舒张压 96mmHg</div>
-            <div class="list-sub" style="color:#dc2626;">高于近 7 天平均值，建议关注</div>
-          </div>
-        </div>
-        <div class="list-item">
-          <span class="list-icon">💊</span>
-          <div class="list-content">
-            <div class="list-title">用药提醒未确认</div>
-            <div class="list-sub">2026-10-17 21:00 · 阿托伐他汀钙片未打卡</div>
-          </div>
-        </div>
+        <div class="list-item"><span class="list-icon">🩸</span><div class="list-content"><div class="list-title">血压异常波动</div><div class="list-sub">2026-10-16 08:12 · 收缩压 158mmHg / 舒张压 96mmHg</div><div class="list-sub" style="color:#dc2626;">高于近 7 天平均值，建议关注</div></div></div>
+        <div class="list-item"><span class="list-icon">💊</span><div class="list-content"><div class="list-title">用药提醒未确认</div><div class="list-sub">2026-10-17 21:00 · 阿托伐他汀钙片未打卡</div></div></div>
       </div>
       <div class="card">
         <div class="card-title">🔔 提醒设置</div>
@@ -1209,31 +1126,15 @@
     return `
       <div class="card">
         <div class="card-title">🔍 查询患者记录</div>
-        <div class="input-group" style="margin-bottom: 16px;">
-          <input type="text" placeholder="输入患者 ID 或姓名" style="padding: 14px 0;">
-        </div>
-        <button class="btn btn-primary btn-block" onclick="showToast('查询中…（演示环境）')">查询</button>
+        <div class="input-group" style="margin-bottom: 16px;"><input type="text" placeholder="输入患者 ID 或姓名" style="padding: 14px 0;"></div>
+        <button class="btn btn-primary" onclick="showToast('查询中…（演示环境）')">查询</button>
         <div style="text-align:center; margin: 16px 0; color: var(--text-secondary); font-size: 13px;">或</div>
-        <button class="btn btn-outline btn-block" onclick="openScanModal()">扫描患者授权二维码</button>
+        <button class="btn btn-outline" onclick="openScanModal()">扫描患者授权二维码</button>
       </div>
       <div class="card">
         <div class="card-title">最近查询</div>
-        <div class="list-item">
-          <span class="list-icon">👤</span>
-          <div class="list-content">
-            <div class="list-title">李建国 · ID: GBA-88201</div>
-            <div class="list-sub">上次就诊：2026-10-15 · 高血压复诊</div>
-          </div>
-          <span class="list-action">查看</span>
-        </div>
-        <div class="list-item">
-          <span class="list-icon">👤</span>
-          <div class="list-content">
-            <div class="list-title">陈美玲 · ID: GBA-77123</div>
-            <div class="list-sub">上次就诊：2026-10-12 · 糖尿病随访</div>
-          </div>
-          <span class="list-action">查看</span>
-        </div>
+        <div class="list-item"><span class="list-icon">👤</span><div class="list-content"><div class="list-title">李建国 · ID: GBA-88201</div><div class="list-sub">上次就诊：2026-10-15 · 高血压复诊</div></div><span class="list-action">查看</span></div>
+        <div class="list-item"><span class="list-icon">👤</span><div class="list-content"><div class="list-title">陈美玲 · ID: GBA-77123</div><div class="list-sub">上次就诊：2026-10-12 · 糖尿病随访</div></div><span class="list-action">查看</span></div>
       </div>
     `;
   }
@@ -1243,26 +1144,14 @@
       <div class="card">
         <div class="card-title">📤 上传最新就诊记录</div>
         <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">患者：李建国 · ID: GBA-88201</div>
-        <div style="margin-bottom: 12px;">
-          <label style="font-size: 13px; font-weight: 600; color: var(--text);">诊断结果</label>
-          <input type="text" placeholder="请输入诊断结果" style="width:100%; margin-top:6px; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 15px; outline: none; background: #f9fafb;">
-        </div>
-        <div style="margin-bottom: 12px;">
-          <label style="font-size: 13px; font-weight: 600; color: var(--text);">处方/用药</label>
-          <textarea rows="3" placeholder="请输入处方或用药调整" style="width:100%; margin-top:6px; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 15px; outline: none; background: #f9fafb; resize: none;"></textarea>
-        </div>
-        <div style="margin-bottom: 20px;">
-          <label style="font-size: 13px; font-weight: 600; color: var(--text);">备注</label>
-          <input type="text" placeholder="可选" style="width:100%; margin-top:6px; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 15px; outline: none; background: #f9fafb;">
-        </div>
-        <button class="btn btn-primary btn-block" onclick="showToast('就诊记录已上传（演示环境）')">上传记录</button>
+        <div style="margin-bottom: 12px;"><label style="font-size: 13px; font-weight: 600; color: var(--text);">诊断结果</label><input type="text" placeholder="请输入诊断结果" style="width:100%; margin-top:6px; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 15px; outline: none; background: #f9fafb;"></div>
+        <div style="margin-bottom: 12px;"><label style="font-size: 13px; font-weight: 600; color: var(--text);">处方/用药</label><textarea rows="3" placeholder="请输入处方或用药调整" style="width:100%; margin-top:6px; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 15px; outline: none; background: #f9fafb; resize: none;"></textarea></div>
+        <div style="margin-bottom: 20px;"><label style="font-size: 13px; font-weight: 600; color: var(--text);">备注</label><input type="text" placeholder="可选" style="width:100%; margin-top:6px; padding: 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 15px; outline: none; background: #f9fafb;"></div>
+        <button class="btn btn-primary" onclick="showToast('就诊记录已上传（演示环境）')">上传记录</button>
       </div>
     `;
   }
 
-  /* ============================================================
-   * 三地医院列表（三个端共用）
-   * ============================================================ */
   function renderHospitalList() {
     return `
       <div class="card">
@@ -1270,35 +1159,23 @@
         <div class="card-desc" style="margin-bottom: 16px;">点击“访问官网”即可跳转至医院官方网站（演示：广东省人民医院）</div>
         <div class="hospital-item">
           <div class="hospital-logo">🏥</div>
-          <div class="hospital-info">
-            <div class="hospital-name">广东省人民医院</div>
-            <div class="hospital-addr">广州市越秀区中山二路 106 号</div>
-          </div>
+          <div class="hospital-info"><div class="hospital-name">广东省人民医院</div><div class="hospital-addr">广州市越秀区中山二路 106 号</div></div>
           <a class="hospital-link" href="https://www.gdghospital.org.cn/" target="_blank" rel="noopener">访问官网</a>
         </div>
         <div class="hospital-item">
           <div class="hospital-logo">🏥</div>
-          <div class="hospital-info">
-            <div class="hospital-name">澳门仁伯爵综合医院</div>
-            <div class="hospital-addr">澳门半岛东望洋斜巷</div>
-          </div>
+          <div class="hospital-info"><div class="hospital-name">澳门仁伯爵综合医院</div><div class="hospital-addr">澳门半岛东望洋斜巷</div></div>
           <span class="hospital-link" style="opacity:0.5; cursor:default;">演示不跳转</span>
         </div>
         <div class="hospital-item">
           <div class="hospital-logo">🏥</div>
-          <div class="hospital-info">
-            <div class="hospital-name">香港玛丽医院</div>
-            <div class="hospital-addr">香港岛薄扶林道 102 号</div>
-          </div>
+          <div class="hospital-info"><div class="hospital-name">香港玛丽医院</div><div class="hospital-addr">香港岛薄扶林道 102 号</div></div>
           <span class="hospital-link" style="opacity:0.5; cursor:default;">演示不跳转</span>
         </div>
       </div>
     `;
   }
 
-  /* ============================================================
-   * 扫码 & SOS
-   * ============================================================ */
   function openScanModal() {
     el('modalScanMask').classList.add('show');
     el('modalScan').classList.add('show');
@@ -1317,7 +1194,6 @@
     el('sosCountdown').textContent = state.sosCount;
     el('sosOverlay').classList.add('show');
     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-
     if (state.sosTimer) clearInterval(state.sosTimer);
     state.sosTimer = setInterval(() => {
       state.sosCount--;
@@ -1334,20 +1210,12 @@
     }, 1000);
   }
   function cancelSOS() {
-    if (state.sosTimer) {
-      clearInterval(state.sosTimer);
-      state.sosTimer = null;
-    }
+    if (state.sosTimer) { clearInterval(state.sosTimer); state.sosTimer = null; }
     closeSOS();
     showToast('已取消紧急求助');
   }
-  function closeSOS() {
-    el('sosOverlay').classList.remove('show');
-  }
+  function closeSOS() { el('sosOverlay').classList.remove('show'); }
 
-  /* ============================================================
-   * Toast 与初始化
-   * ============================================================ */
   let toastTimer = null;
   function showToast(msg) {
     const toast = el('toast');
@@ -1359,18 +1227,14 @@
 
   (function init() {
     showScreen('screenLanguage');
-    document.querySelectorAll('#screenLanguage .option-card').forEach((card, idx) => {
-      card.addEventListener('click', () => {
-        document.querySelectorAll('#screenLanguage .option-card .check-icon').forEach(ic => ic.style.opacity = '0');
-        card.querySelector('.check-icon').style.opacity = '1';
-      });
-    });
     document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
   })();
 
   window.selectLanguage = selectLanguage;
   window.selectRole = selectRole;
   window.toggleAgree = toggleAgree;
+  window.openAgreement = openAgreement;
+  window.closeAgreement = closeAgreement;
   window.sendCode = sendCode;
   window.doLogin = doLogin;
   window.switchTab = switchTab;
