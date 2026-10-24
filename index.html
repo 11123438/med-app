@@ -560,22 +560,17 @@
    * ============================================================ */
   let deferredPrompt = null;
 
-  // 监听安装事件
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    // 可以在这里选择显示一个全局的安装提示按钮
-    // 为了不干扰老人端，我们放在“我的”页面里的“安装到手机”按钮触发
   });
 
-  // 注册 Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(err => {
-      console.log('SW 注册失败（如果是本地 file:// 打开则属正常）', err);
+      console.log('SW 注册失败（本地测试忽略）', err);
     });
   }
 
-  // 触发安装
   async function installApp() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -589,7 +584,6 @@
       return;
     }
     
-    // 如果没有 deferredPrompt（iOS 或已安装过）
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     
@@ -735,6 +729,9 @@
     showToast('登录成功，欢迎使用粤港澳医疗通');
   }
 
+  /* ============================================================
+   * 底部导航构建（各端新增三地医院）
+   * ============================================================ */
   function buildTabbar() {
     let items = [];
     if (state.role === 'elder') {
@@ -742,6 +739,7 @@
         { icon: '📷', label: t('tabScan') },
         { icon: '📋', label: t('tabRecord') },
         { icon: '📞', label: t('tabContact') },
+        { icon: '🏥', label: t('tabHospital') }, // 新增：老人端三地医院
         { icon: '👤', label: t('tabProfile') },
       ];
     } else if (state.role === 'guardian') {
@@ -749,6 +747,7 @@
         { icon: '🔐', label: t('tabAuth') },
         { icon: '🗺️', label: t('tabTrace') },
         { icon: '⚠️', label: t('tabAlert') },
+        { icon: '🏥', label: t('tabHospital') }, // 新增：监护人端三地医院
         { icon: '👤', label: t('tabProfile') },
       ];
     } else {
@@ -767,6 +766,7 @@
       </div>
     `).join('');
 
+    // 只有老人端显示顶部悬浮 SOS
     if (state.role === 'elder') {
       headerSOSBtn.classList.add('show');
     } else {
@@ -781,8 +781,8 @@
     });
 
     const titles = {
-      elder: [t('tabScan'), t('tabRecord'), t('tabContact'), t('tabProfile')],
-      guardian: [t('tabAuth'), t('tabTrace'), t('tabAlert'), t('tabProfile')],
+      elder: [t('tabScan'), t('tabRecord'), t('tabContact'), t('tabHospital'), t('tabProfile')],
+      guardian: [t('tabAuth'), t('tabTrace'), t('tabAlert'), t('tabHospital'), t('tabProfile')],
       hospital: [t('tabPatients'), t('tabUpload'), t('tabHospital'), t('tabProfile')]
     };
     appHeaderTitle.textContent = titles[state.role][idx] || '';
@@ -792,17 +792,23 @@
   }
 
   function getContent(role, tabIndex) {
-    if (tabIndex === 3) return renderProfile();
+    // 老人/监护人端：第5个Tab（索引4）是“我的”
+    if (role === 'elder' && tabIndex === 4) return renderProfile();
+    if (role === 'guardian' && tabIndex === 4) return renderProfile();
+    // 医院端：第4个Tab（索引3）是“我的”
+    if (role === 'hospital' && tabIndex === 3) return renderProfile();
 
     if (role === 'elder') {
       if (tabIndex === 0) return renderElderScan();
       if (tabIndex === 1) return renderElderRecords();
       if (tabIndex === 2) return renderElderContacts();
+      if (tabIndex === 3) return renderHospitalList(); // 老人端三地医院
     }
     if (role === 'guardian') {
       if (tabIndex === 0) return renderGuardianAuth();
       if (tabIndex === 1) return renderGuardianTrace();
       if (tabIndex === 2) return renderGuardianAlert();
+      if (tabIndex === 3) return renderHospitalList(); // 监护人端三地医院
     }
     if (role === 'hospital') {
       if (tabIndex === 0) return renderHospitalQuery();
@@ -812,6 +818,9 @@
     return '';
   }
 
+  /* ============================================================
+   * 我的页面
+   * ============================================================ */
   function renderProfile() {
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
     const names = { elder: '李建国', guardian: '张先生', hospital: '广东省人民医院' };
@@ -867,7 +876,6 @@
           <span class="list-action">›</span>
         </div>
         
-        <!-- 安装到手机入口 -->
         <div class="list-item" onclick="installApp()">
           <span class="list-icon">📲</span>
           <div class="list-content">
@@ -877,19 +885,11 @@
           <span class="list-action" style="color:var(--primary);">安装</span>
         </div>
 
-        <div class="list-item" onclick="openHospitalList()">
-          <span class="list-icon">🏥</span>
-          <div class="list-content">
-            <div class="list-title">三地医院</div>
-            <div class="list-sub">查看合作医院及官网</div>
-          </div>
-          <span class="list-action">›</span>
-        </div>
         <div class="list-item" onclick="showToast('打开关于页面')">
           <span class="list-icon">ℹ️</span>
           <div class="list-content">
             <div class="list-title">关于粤港澳医疗通</div>
-            <div class="list-sub">版本 v1.5.0</div>
+            <div class="list-sub">版本 v1.6.0</div>
           </div>
           <span class="list-action">›</span>
         </div>
@@ -901,6 +901,9 @@
     `;
   }
 
+  /* ============================================================
+   * 切换身份（带验证码）
+   * ============================================================ */
   let switchTargetRole = null;
   let switchCountdown = 0;
   let switchTimer = null;
@@ -988,7 +991,9 @@
     showToast('已退出登录');
   }
 
-  /* ===== 老人端内容 ===== */
+  /* ============================================================
+   * 各端内容页面
+   * ============================================================ */
   function renderElderScan() {
     return `
       <div style="text-align: center; padding: 30px 0;">
@@ -1100,7 +1105,6 @@
     `;
   }
 
-  /* ===== 监护人端内容 ===== */
   function renderGuardianAuth() {
     return `
       <div class="card">
@@ -1204,7 +1208,6 @@
     `;
   }
 
-  /* ===== 医院端内容 ===== */
   function renderHospitalQuery() {
     return `
       <div class="card">
@@ -1260,6 +1263,9 @@
     `;
   }
 
+  /* ============================================================
+   * 三地医院列表（三个端共用）
+   * ============================================================ */
   function renderHospitalList() {
     return `
       <div class="card">
@@ -1293,27 +1299,9 @@
     `;
   }
 
-  function openHospitalList() {
-    const modal = document.createElement('div');
-    modal.className = 'modal-box show';
-    modal.style.display = 'block';
-    modal.innerHTML = `
-      <div class="modal-title">🏥 三地医院</div>
-      <div style="max-height: 400px; overflow-y: auto; text-align: left; margin-bottom: 16px;">
-        ${renderHospitalList()}
-      </div>
-      <button class="btn btn-outline btn-block" onclick="this.closest('.modal-box').remove(); document.querySelector('.modal-mask').classList.remove('show');">关闭</button>
-    `;
-    let mask = document.querySelector('.modal-mask.temp-hospital');
-    if (!mask) {
-      mask = document.createElement('div');
-      mask.className = 'modal-mask temp-hospital show';
-      mask.onclick = () => { mask.classList.remove('show'); modal.remove(); };
-      document.body.appendChild(mask);
-    }
-    document.body.appendChild(modal);
-  }
-
+  /* ============================================================
+   * 扫码 & SOS
+   * ============================================================ */
   function openScanModal() {
     el('modalScanMask').classList.add('show');
     el('modalScan').classList.add('show');
@@ -1360,6 +1348,9 @@
     el('sosOverlay').classList.remove('show');
   }
 
+  /* ============================================================
+   * Toast 与初始化
+   * ============================================================ */
   let toastTimer = null;
   function showToast(msg) {
     const toast = el('toast');
@@ -1395,7 +1386,6 @@
   window.simulateScanSuccess = simulateScanSuccess;
   window.openSOS = openSOS;
   window.cancelSOS = cancelSOS;
-  window.openHospitalList = openHospitalList;
   window.showToast = showToast;
   window.logout = logout;
   window.installApp = installApp;
