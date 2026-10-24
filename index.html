@@ -4,9 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>粤港澳医疗通 · 角色版</title>
+  
+  <!-- ===== PWA 相关 Meta ===== -->
   <meta name="theme-color" content="#2563eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="粤港澳医疗通">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+
   <style>
     :root {
       --primary: #2563eb;
@@ -55,24 +62,6 @@
       opacity: 1;
       pointer-events: auto;
       z-index: 2;
-    }
-    /* 老人端全局放大 */
-    .elder-mode {
-      font-size: 18px;
-    }
-    .elder-mode .btn {
-      font-size: 20px;
-      padding: 20px;
-    }
-    .elder-mode .card {
-      padding: 24px;
-    }
-    .elder-mode .nav-item span {
-      font-size: 14px;
-    }
-    .elder-mode .nav-item svg {
-      width: 28px;
-      height: 28px;
     }
     /* 通用按钮 */
     .btn {
@@ -218,10 +207,10 @@
       padding: 4px 10px; border-radius: 12px; font-weight: 600;
     }
     
-    /* 🔴 全局悬浮 SOS 图标 (右上角) */
+    /* 🔴 全局悬浮 SOS 图标 */
     .global-sos-btn {
       position: absolute;
-      top: 58px; /* 刚好在 Header 下方一点点，不与标题重叠 */
+      top: 58px;
       right: 20px;
       width: 62px;
       height: 62px;
@@ -239,7 +228,7 @@
       font-family: inherit;
       box-shadow: 0 8px 24px rgba(220,38,38,0.5);
       animation: pulseSOS 2s infinite;
-      z-index: 100; /* 保证永远悬浮在内容之上 */
+      z-index: 100;
     }
     .global-sos-btn span { font-size: 10px; font-weight: 500; opacity: 0.9; margin-top: 2px; }
     .global-sos-btn.show { display: flex; }
@@ -300,23 +289,6 @@
     }
     .card-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
     .card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-    .big-action-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 14px; }
-    .big-action-btn {
-      border-radius: 18px; padding: 26px 20px;
-      font-size: 20px; font-weight: 700;
-      display: flex; align-items: center; gap: 16px;
-      color: #fff; border: none; cursor: pointer;
-      transition: transform 0.15s; text-align: left;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    }
-    .big-action-btn:active { transform: scale(0.97); }
-    .big-action-btn .icon { font-size: 32px; }
-    .bg-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-    .bg-green { background: linear-gradient(135deg, #10b981, #059669); }
-    .bg-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
-    .bg-orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
-    .bg-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-
     .list-item {
       display: flex; align-items: center; padding: 14px 0;
       border-bottom: 1px solid var(--border);
@@ -354,23 +326,7 @@
     .modal-box.show { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
     .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
     .modal-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
-    .scan-frame {
-      width: 200px; height: 200px; margin: 0 auto 20px;
-      border: 3px dashed var(--primary); border-radius: 20px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: var(--primary); position: relative; overflow: hidden;
-    }
-    .scan-frame .scan-line {
-      position: absolute; left: 0; right: 0; height: 3px;
-      background: var(--primary); box-shadow: 0 0 10px var(--primary);
-      animation: scanMove 2s infinite linear;
-    }
-    @keyframes scanMove {
-      0% { top: 0; }
-      100% { top: 100%; }
-    }
-    .scan-icon { font-size: 48px; margin-bottom: 10px; }
-
+    
     /* SOS 全屏动画 */
     .sos-overlay {
       position: fixed; inset: 0; z-index: 200;
@@ -547,7 +503,7 @@
       </div>
     </header>
 
-    <!-- 🔴 全局悬浮 SOS 按钮 (仅老人端显示) -->
+    <!-- 全局悬浮 SOS 按钮 (仅老人端显示) -->
     <button class="global-sos-btn" id="headerSOSBtn" onclick="openSOS()">
       SOS
       <span>一键求助</span>
@@ -563,9 +519,9 @@
 <div class="modal-mask" id="modalScanMask" onclick="closeModal('modalScan')"></div>
 <div class="modal-box" id="modalScan">
   <div class="modal-title">扫码授权</div>
-  <div class="scan-frame">
-    <div class="scan-line"></div>
-    <div class="scan-icon">📷</div>
+  <div style="width: 200px; height: 200px; margin: 0 auto 20px; border: 3px dashed var(--primary); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--primary); position: relative; overflow: hidden;">
+    <div style="position: absolute; left: 0; right: 0; height: 3px; background: var(--primary); box-shadow: 0 0 10px var(--primary); animation: scanMove 2s infinite linear;"></div>
+    <div style="font-size: 48px; margin-bottom: 10px;">📷</div>
     <div style="font-size: 13px;">请对准医院/监护人二维码</div>
   </div>
   <div class="modal-desc">扫描成功后将授权对方查看您的近期就诊记录</div>
@@ -600,11 +556,61 @@
 
 <script>
   /* ============================================================
+   * PWA 安装逻辑
+   * ============================================================ */
+  let deferredPrompt = null;
+
+  // 监听安装事件
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // 可以在这里选择显示一个全局的安装提示按钮
+    // 为了不干扰老人端，我们放在“我的”页面里的“安装到手机”按钮触发
+  });
+
+  // 注册 Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(err => {
+      console.log('SW 注册失败（如果是本地 file:// 打开则属正常）', err);
+    });
+  }
+
+  // 触发安装
+  async function installApp() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      if (outcome === 'accepted') {
+        showToast('已开始安装到主屏幕');
+      } else {
+        showToast('已取消安装');
+      }
+      return;
+    }
+    
+    // 如果没有 deferredPrompt（iOS 或已安装过）
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    
+    if (isStandalone) {
+      showToast('您已经在独立应用模式下运行');
+      return;
+    }
+
+    if (isIOS) {
+      alert('请按以下步骤添加到主屏幕：\n\n1. 点击 Safari 底部的「分享」按钮（方框+向上箭头）\n2. 向下滑动找到「添加到主屏幕」\n3. 点击右上角的「添加」\n\n完成后即可从桌面全屏打开本应用。');
+    } else {
+      alert('请按以下步骤添加到主屏幕：\n\n1. 点击浏览器右上角菜单（通常是三个点）\n2. 选择「安装应用」或「添加到主屏幕」\n3. 确认安装\n\n如果找不到该选项，请确保页面是通过 HTTPS 访问的。');
+    }
+  }
+
+  /* ============================================================
    * 全局状态
    * ============================================================ */
   const state = {
     language: 'zh',
-    role: 'elder', // elder | guardian | hospital
+    role: 'elder', 
     loggedIn: false,
     phone: '',
     code: '',
@@ -626,82 +632,42 @@
   const appTabbar = el('appTabbar');
   const appHeaderTitle = el('appHeaderTitle');
   const appHeaderRole = el('appHeaderRole');
-  const headerSOSBtn = el('headerSOSBtn'); // 全局悬浮 SOS 按钮
+  const headerSOSBtn = el('headerSOSBtn');
 
-  /* ============================================================
-   * 多语言基础字典
-   * ============================================================ */
   const i18n = {
     zh: {
-      tabScan: '扫码授权',
-      tabRecord: '我的记录',
-      tabContact: '紧急联系人',
-      tabAuth: '授权状态',
-      tabTrace: '就医轨迹',
-      tabAlert: '异常提醒',
-      tabPatients: '患者查询',
-      tabUpload: '上传记录',
-      tabHospital: '三地医院',
-      tabProfile: '我的',
+      tabScan: '扫码授权', tabRecord: '我的记录', tabContact: '紧急联系人',
+      tabAuth: '授权状态', tabTrace: '就医轨迹', tabAlert: '异常提醒',
+      tabPatients: '患者查询', tabUpload: '上传记录', tabHospital: '三地医院', tabProfile: '我的',
     },
     en: {
-      tabScan: 'Scan Auth',
-      tabRecord: 'My Records',
-      tabContact: 'Emergency',
-      tabAuth: 'Auth Status',
-      tabTrace: 'Care Trace',
-      tabAlert: 'Alerts',
-      tabPatients: 'Patient Query',
-      tabUpload: 'Upload Record',
-      tabHospital: 'Hospitals',
-      tabProfile: 'Me',
+      tabScan: 'Scan Auth', tabRecord: 'My Records', tabContact: 'Emergency',
+      tabAuth: 'Auth Status', tabTrace: 'Care Trace', tabAlert: 'Alerts',
+      tabPatients: 'Patient Query', tabUpload: 'Upload Record', tabHospital: 'Hospitals', tabProfile: 'Me',
     },
     pt: {
-      tabScan: 'Digitalizar',
-      tabRecord: 'Meus Registos',
-      tabContact: 'Emergência',
-      tabAuth: 'Estado da Autorização',
-      tabTrace: 'Rastreio Clínico',
-      tabAlert: 'Alertas',
-      tabPatients: 'Consultar Doente',
-      tabUpload: 'Carregar Registo',
-      tabHospital: 'Hospitais',
-      tabProfile: 'Eu',
+      tabScan: 'Digitalizar', tabRecord: 'Meus Registos', tabContact: 'Emergência',
+      tabAuth: 'Estado da Autorização', tabTrace: 'Rastreio Clínico', tabAlert: 'Alertas',
+      tabPatients: 'Consultar Doente', tabUpload: 'Carregar Registo', tabHospital: 'Hospitais', tabProfile: 'Eu',
     },
     yue: {
-      tabScan: '掃碼授權',
-      tabRecord: '我的記錄',
-      tabContact: '緊急聯絡人',
-      tabAuth: '授權狀態',
-      tabTrace: '就醫軌跡',
-      tabAlert: '異常提醒',
-      tabPatients: '患者查詢',
-      tabUpload: '上傳記錄',
-      tabHospital: '三地醫院',
-      tabProfile: '我的',
+      tabScan: '掃碼授權', tabRecord: '我的記錄', tabContact: '緊急聯絡人',
+      tabAuth: '授權狀態', tabTrace: '就醫軌跡', tabAlert: '異常提醒',
+      tabPatients: '患者查詢', tabUpload: '上傳記錄', tabHospital: '三地醫院', tabProfile: '我的',
     }
   };
   const t = key => (i18n[state.language] && i18n[state.language][key]) || key;
 
-  /* ============================================================
-   * 屏幕切换
-   * ============================================================ */
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     el(id).classList.add('active');
   }
 
-  /* ============================================================
-   * 1. 语言选择
-   * ============================================================ */
   function selectLanguage(lang) {
     state.language = lang;
     setTimeout(() => { showScreen('screenRole'); }, 200);
   }
 
-  /* ============================================================
-   * 2. 角色选择
-   * ============================================================ */
   function selectRole(role) {
     state.role = role;
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
@@ -710,9 +676,6 @@
     showScreen('screenLogin');
   }
 
-  /* ============================================================
-   * 3. 登录页逻辑
-   * ============================================================ */
   function validPhone(v) {
     return /^1[3-9]\d{9}$/.test(v) || /^[4-9]\d{7}$/.test(v) || /^6\d{7}$/.test(v);
   }
@@ -772,9 +735,6 @@
     showToast('登录成功，欢迎使用粤港澳医疗通');
   }
 
-  /* ============================================================
-   * 4. 主界面 Tab 与内容
-   * ============================================================ */
   function buildTabbar() {
     let items = [];
     if (state.role === 'elder') {
@@ -807,7 +767,6 @@
       </div>
     `).join('');
 
-    // 控制悬浮 SOS 按钮显示：仅老人端显示
     if (state.role === 'elder') {
       headerSOSBtn.classList.add('show');
     } else {
@@ -833,7 +792,7 @@
   }
 
   function getContent(role, tabIndex) {
-    if (tabIndex === 3) return renderProfile(); // 我的
+    if (tabIndex === 3) return renderProfile();
 
     if (role === 'elder') {
       if (tabIndex === 0) return renderElderScan();
@@ -853,9 +812,6 @@
     return '';
   }
 
-  /* ============================================================
-   * 我的（三个端通用）
-   * ============================================================ */
   function renderProfile() {
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
     const names = { elder: '李建国', guardian: '张先生', hospital: '广东省人民医院' };
@@ -910,6 +866,17 @@
           </div>
           <span class="list-action">›</span>
         </div>
+        
+        <!-- 安装到手机入口 -->
+        <div class="list-item" onclick="installApp()">
+          <span class="list-icon">📲</span>
+          <div class="list-content">
+            <div class="list-title">安装到手机</div>
+            <div class="list-sub">添加到桌面，全屏运行</div>
+          </div>
+          <span class="list-action" style="color:var(--primary);">安装</span>
+        </div>
+
         <div class="list-item" onclick="openHospitalList()">
           <span class="list-icon">🏥</span>
           <div class="list-content">
@@ -934,9 +901,6 @@
     `;
   }
 
-  /* ============================================================
-   * 切换身份（带验证码验证）
-   * ============================================================ */
   let switchTargetRole = null;
   let switchCountdown = 0;
   let switchTimer = null;
@@ -947,7 +911,6 @@
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
     el('switchModalDesc').textContent = `为保障安全，切换至【${roleNames[role]}】需要重新验证手机号`;
 
-    // 重置弹窗状态
     const input = el('switchCodeInput');
     input.value = '';
     el('switchConfirmBtn').disabled = true;
@@ -956,7 +919,6 @@
     switchCountdown = 0;
     if (switchTimer) { clearInterval(switchTimer); switchTimer = null; }
 
-    // 输入监听
     input.oninput = (e) => {
       e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
       el('switchConfirmBtn').disabled = e.target.value.length < 4;
@@ -1000,7 +962,6 @@
     const role = switchTargetRole;
     closeSwitchModal();
 
-    // 执行切换
     state.role = role;
     const roleNames = { elder: '老人端', guardian: '监护人端', hospital: '医院端' };
     el('appHeaderRole').textContent = roleNames[role];
@@ -1020,8 +981,6 @@
     codeInput.value = '';
     agreeBox.classList.remove('checked');
     loginBtn.disabled = true;
-    
-    // 隐藏悬浮 SOS 按钮
     headerSOSBtn.classList.remove('show');
     refreshLoginState();
 
@@ -1029,9 +988,7 @@
     showToast('已退出登录');
   }
 
-  /* ============================================================
-   * 老人端内容
-   * ============================================================ */
+  /* ===== 老人端内容 ===== */
   function renderElderScan() {
     return `
       <div style="text-align: center; padding: 30px 0;">
@@ -1143,9 +1100,7 @@
     `;
   }
 
-  /* ============================================================
-   * 监护人端内容
-   * ============================================================ */
+  /* ===== 监护人端内容 ===== */
   function renderGuardianAuth() {
     return `
       <div class="card">
@@ -1249,9 +1204,7 @@
     `;
   }
 
-  /* ============================================================
-   * 医院端内容
-   * ============================================================ */
+  /* ===== 医院端内容 ===== */
   function renderHospitalQuery() {
     return `
       <div class="card">
@@ -1340,9 +1293,6 @@
     `;
   }
 
-  /* ============================================================
-   * 通用：三地医院列表（在“我的”里调用）
-   * ============================================================ */
   function openHospitalList() {
     const modal = document.createElement('div');
     modal.className = 'modal-box show';
@@ -1364,9 +1314,6 @@
     document.body.appendChild(modal);
   }
 
-  /* ============================================================
-   * 扫码弹窗
-   * ============================================================ */
   function openScanModal() {
     el('modalScanMask').classList.add('show');
     el('modalScan').classList.add('show');
@@ -1380,9 +1327,6 @@
     showToast('✅ 扫码成功，已授权对方查看近期记录');
   }
 
-  /* ============================================================
-   * 紧急求助 SOS
-   * ============================================================ */
   function openSOS() {
     state.sosCount = 5;
     el('sosCountdown').textContent = state.sosCount;
@@ -1416,9 +1360,6 @@
     el('sosOverlay').classList.remove('show');
   }
 
-  /* ============================================================
-   * Toast
-   * ============================================================ */
   let toastTimer = null;
   function showToast(msg) {
     const toast = el('toast');
@@ -1428,9 +1369,6 @@
     toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
   }
 
-  /* ============================================================
-   * 初始化
-   * ============================================================ */
   (function init() {
     showScreen('screenLanguage');
     document.querySelectorAll('#screenLanguage .option-card').forEach((card, idx) => {
@@ -1442,7 +1380,6 @@
     document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
   })();
 
-  // 暴露给 onclick 使用
   window.selectLanguage = selectLanguage;
   window.selectRole = selectRole;
   window.toggleAgree = toggleAgree;
@@ -1461,6 +1398,7 @@
   window.openHospitalList = openHospitalList;
   window.showToast = showToast;
   window.logout = logout;
+  window.installApp = installApp;
 </script>
 </body>
 </html>
